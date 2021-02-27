@@ -1,6 +1,9 @@
 package com.foodmanager.foodplan;
 
 import com.foodmanager.models.Food;
+import com.foodmanager.models.FoodRequest;
+import com.foodmanager.models.Ingredient;
+import com.foodmanager.models.IngredientRequest;
 import com.foodmanager.models.Plan;
 import com.foodmanager.models.PlanConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,27 +20,33 @@ import static com.foodmanager.foodplan.PlanBuilder.createPlan;
 @RestController
 public class FoodplanController {
 
-//    private PlanConfiguration config;
-
-    private FoodRepository foodRepository;
+    private FoodplanService foodplanService;
 
     @Autowired
-    public FoodplanController(FoodRepository foodRepository) {
-        this.foodRepository = foodRepository;
+    public FoodplanController(FoodplanService foodplanService) {
+        this.foodplanService = foodplanService;
     }
 
-    @GetMapping("/allFoods")
-    public List<Food> getAll() {
-        //to service
-        return foodRepository.findAll();
+    @GetMapping("/food")
+    public List<Food> getFoods() {
+        return foodplanService.getFoods();
     }
 
-    @PostMapping("/addFood")
+    @PostMapping("/food")
     @Transactional
-    public void addFood(@RequestBody Food food) {
-        //to service
-        //transactional
-        foodRepository.save(food);
+    public void addFood(@RequestBody FoodRequest food) {
+        foodplanService.addFood(food);
+    }
+
+    @GetMapping("/ingredient")
+    public List<Ingredient> getIngredients() {
+        return foodplanService.getIngredients();
+    }
+
+    @PostMapping("/ingredient")
+    @Transactional
+    public void addIngredient(@RequestBody IngredientRequest ingredient) {
+        foodplanService.addIngredient(ingredient);
     }
 
     /*@PostMapping("/configurate")

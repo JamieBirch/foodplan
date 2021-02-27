@@ -7,41 +7,35 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Data
-public class Food {
+@Table(name = "ingredient_info")
+public class IngredientInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String name;
-
-    private Integer ccal;
-    private Integer protein;
-    private Integer fat;
-    private Integer carbs;
-
-    @OneToMany(
-                    mappedBy = "food",
-                    cascade = CascadeType.ALL,
-                    orphanRemoval = true
-            )
-    @JsonIgnoreProperties("food")
+    @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<IngredientInfo> ingredients = new ArrayList<>();
+    private Food food;
 
-    private String recipe;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private Ingredient ingredient;
+    private Integer howMuch;
+    private UnitOfMeasure uom;
 
 }

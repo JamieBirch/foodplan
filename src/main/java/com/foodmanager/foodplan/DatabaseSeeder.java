@@ -70,10 +70,10 @@ public class DatabaseSeeder implements CommandLineRunner {
         foodRepository.saveAll(foods);*/
     }
 
-    private Food createFood(Long id, String name, int ccal, int protein, int fat, int carbs, String ingredient) {
+    /*private Food createFood(Long id, String name, int ccal, int protein, int fat, int carbs, String ingredient) {
         Ingredient newIngredient = new Ingredient(new Random().nextLong(), ingredient, null);
         Food food = new Food(id, name, ccal, protein, fat, carbs, Set.of(newIngredient));
         newIngredient.setFoods(Set.of(food));
         return food;
-    }
+    }*/
 }
