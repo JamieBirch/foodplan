@@ -8,4 +8,5 @@ import lombok.Data;
 public class PlanConfiguration {
     private int days;
     private Macros requirements;
+    private Integer marginOfError;
 }

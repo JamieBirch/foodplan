@@ -9,7 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Plan {
-    private Macros requirements;
-    private List<DayPlan> dayToFoods;
+public class DayPlan {
+    Integer day;
+    List<Food> foods;
+    Macros dayStats;
 }
