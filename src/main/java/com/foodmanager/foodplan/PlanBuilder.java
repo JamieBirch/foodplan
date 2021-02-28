@@ -1,9 +1,10 @@
 package com.foodmanager.foodplan;
 
 import com.foodmanager.models.Food;
-import com.foodmanager.models.FoodRequirements;
+import com.foodmanager.models.Macros;
 import com.foodmanager.models.Plan;
 import com.foodmanager.models.PlanConfiguration;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,20 +15,23 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+@Service
 public class PlanBuilder {
 
-    public static Plan createPlan(PlanConfiguration config) {
+    public static Plan createPlan(PlanConfiguration config, List<Food> foods) {
         int days = config.getDays();
+        Macros macros = Optional.ofNullable(config.getRequirements())
+                .orElse(defaultMarcos());
 
-        List<Food> allFoods = new FoodDataHolder().getFoods().stream()
+        List<Food> allFoods = foods.stream()
                 .sorted(Comparator.comparingInt(Food::getCcal))
                 .collect(Collectors.toUnmodifiableList());
-        FoodRequirements requirements = config.getRequirements();
-        int ccal = requirements.getCcal();
-        int protein = requirements.getProtein();
-        int fat = requirements.getFat();
-        int carbs = requirements.getCarbs();
-        int marginOfError = requirements.getMarginOfError();
+//        Macros requirements = config.getRequirements();
+        int ccal = macros.getCcal();
+        int protein = macros.getProtein();
+        int fat = macros.getFat();
+        int carbs = macros.getCarbs();
+        int marginOfError = macros.getMarginOfError();
 
         Map<Integer, List<Food>> dayToFoods = new HashMap<>();
         for (int i = 1; i <= days; i++) {
@@ -35,7 +39,17 @@ public class PlanBuilder {
             dayToFoods.put(i, dayFoods);
         }
 
-        return new Plan(requirements, dayToFoods);
+        return new Plan(macros, dayToFoods);
+    }
+
+    private static Macros defaultMarcos() {
+        int defaultCcal = 1500;
+        int defaultCarbs = (int) (defaultCcal * 0.4 / 4);
+        int defaultProtein = (int) (defaultCcal * 0.3 / 4);
+        int defaultFat = (int) (defaultCcal * 0.3 / 9);
+        int defaultMarginOfError = 8;
+
+        return new Macros(defaultCcal, defaultProtein, defaultFat, defaultCarbs, defaultMarginOfError);
     }
 
     private static List<Food> createDayMenue(List<Food> allFoods, int expectedCcalSum, int expectedProteinSum, int expectedFatSum, int expectedCarbsSum, int marginOfError) {

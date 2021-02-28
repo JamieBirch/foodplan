@@ -11,6 +11,6 @@ import java.util.Map;
 @NoArgsConstructor
 @Data
 public class Plan {
-    private FoodRequirements requirements;
+    private Macros requirements;
     private Map<Integer, List<Food>> dayToFoods;
 }

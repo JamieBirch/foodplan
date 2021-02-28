@@ -5,7 +5,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class FoodRequirements {
+public class Macros {
     private int ccal;
     private int protein;
     private int fat;

@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.foodmanager.foodplan.PlanBuilder.createPlan;
-
 @RestController
 public class FoodplanController {
 
@@ -49,13 +47,14 @@ public class FoodplanController {
         foodplanService.addIngredient(ingredient);
     }
 
-    /*@PostMapping("/configurate")
-    public void configurate(@RequestBody PlanConfiguration configuration) {
-        config = configuration;
-    }*/
+    @PostMapping("/ingredients")
+    @Transactional
+    public void addIngredients(@RequestBody List<IngredientRequest> ingredients) {
+        foodplanService.addIngredients(ingredients);
+    }
 
     @GetMapping("/plan")
     public Plan getPlan(@RequestBody PlanConfiguration configuration) {
-        return createPlan(configuration);
+        return foodplanService.createPlan(configuration);
     }
 }

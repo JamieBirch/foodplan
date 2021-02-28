@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class PlanConfiguration {
     private int days;
-    private FoodRequirements requirements;
+    private Macros requirements;
 }
