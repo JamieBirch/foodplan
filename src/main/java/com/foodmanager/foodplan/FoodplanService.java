@@ -84,4 +84,14 @@ public class FoodplanService {
         List<Food> allFoods = foodRepository.findAll();
         return PlanBuilder.createPlan(configuration, allFoods);
     }
+
+    @Transactional
+    public void deleteFood(long id) {
+        foodRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteIngredient(long id) {
+        ingredientRepository.deleteById(id);
+    }
 }
