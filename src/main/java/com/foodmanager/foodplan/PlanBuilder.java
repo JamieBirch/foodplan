@@ -67,7 +67,7 @@ public class PlanBuilder {
     }
 
     private static Macros defaultMarcos() {
-        int defaultCcal = 1500;
+        int defaultCcal = 1800;
         int defaultCarbs = (int) (defaultCcal * 0.4 / 4);
         int defaultProtein = (int) (defaultCcal * 0.3 / 4);
         int defaultFat = (int) (defaultCcal * 0.3 / 9);
