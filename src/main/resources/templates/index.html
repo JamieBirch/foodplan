@@ -26,12 +26,14 @@
         <div class="col-lg-offset-2 col-lg-8">
             <!-- Get all bookings or only affordable ones -->
             <div class="btn-group" role="group">
-                <button ng-click="vm.getFoods()" type="button" class="btn btn-default">Foods</button>
-<!--                <button ng-click="vm.getIngredients()" type="button" class="btn btn-default">Ingredients</button>-->
+<!--                <button ng-click="vm.getFoods()" type="button" class="btn btn-default">Foods</button>-->
+                <button ng-click="vm.openTab(event, 'Foods')" type="button" class="btn btn-default">Foods</button>
+                <button ng-click="vm.openTab(event, 'Ingredients')" type="button" class="btn btn-default">Ingredients</button>
+                <button ng-click="vm.getPlan()" type="button" class="btn btn-default">Plan</button>
             </div>
 
             <!-- Display bookings in a table -->
-            <table class="table">
+            <table id="Foods" class="table">
                 <thead>
                 <tr>
                     <th>Name</th>
@@ -51,6 +53,23 @@
                     <td>{{food.carbs}}</td>
                     <td>
                         <button class="btn btn-danger" ng-click="vm.deleteFood(food.id)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table id="Ingredients" class="table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th style="width: 90px"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="ingredient in vm.ingredients">
+                    <td>{{ingredient.name}}</td>
+                    <td>
+                        <button class="btn btn-danger" ng-click="vm.deleteIngredient(ingredient.id)">Delete</button>
                     </td>
                 </tr>
                 </tbody>
