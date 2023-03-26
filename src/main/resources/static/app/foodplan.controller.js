@@ -62,16 +62,15 @@ function openTab(evt, tabName) {
 
   // Get all elements with class="tables" and hide them
   disableAllTables()
+  // Make table visible
+  document.getElementById(tabName).style.display = "table";
 
   // Get all elements with class="tabbuttons" and remove the class "active"
+    //TODO why??
   tabbuttons = document.getElementsByClassName("btn-default");
   for (i = 0; i < tabbuttons.length; i++) {
     tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
   }
-
-  // Show the current tab, and add an "active" class to the button that opened the tab
-  document.getElementById(tabName).style.display = "block";
-//  evt.currentTarget.className += " active";
 }
 
 function disableAllTables() {
