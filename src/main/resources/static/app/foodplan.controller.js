@@ -23,11 +23,11 @@
 
         function init() {
             disableAllTables();
-            getFoods();
-            getIngredients();
+//            getFoods();
+//            getIngredients();
         }
 
-        //Ingredients
+        // Ingredients
 
         function getIngredients() {
             var url = "/ingredient";
@@ -58,7 +58,7 @@
                 });
         }
 
-        //Foods
+        // Foods
 
         function getFoods() {
             var url = "/food";
@@ -81,38 +81,49 @@
             var myJson = JSON.stringify(food);
             $http.post(url, myJson)
                 .then(function(response) {
-                  console.log('Food added:', response.data);
-                  getFoods();
+                    console.log('Food added:', response.data);
+                    getFoods();
                 })
                 .catch(function(error) {
-                  console.error('There was a problem adding the food:', error);
+                    console.error('There was a problem adding the food:', error);
                 });
         }
 
-        //Other
+        // Other
 
         function openTab(evt, tabName) {
-            //TODO update table content by openTab call
+            // Update table content by calling corresponding function
+            switch (tabName) {
+                case "Foods":
+                    getFoods();
+                    break;
+                case "Ingredients":
+                    getIngredients();
+                    break;
+                default:
+                    break;
+            }
 
             var i, tabbuttons;
 
             // Get all elements with class="tables" and hide them
-            disableAllTables()
+            disableAllTables();
+
             // Make table visible
             document.getElementById(tabName).style.display = "table";
 
             // Get all elements with class="tabbuttons" and remove the class "active"
-            //TODO why??
             tabbuttons = document.getElementsByClassName("btn-default");
             for (i = 0; i < tabbuttons.length; i++) {
                 tabbuttons[i].className = tabbuttons[i].className.replace(" active", "");
             }
+
+            // Add the class "active" to the button that opened the tab
+//            evt.currentTarget.className += " active";
         }
 
         function disableAllTables() {
-
             var i, tables;
-
             tables = document.getElementsByClassName("table");
             for (i = 0; i < tables.length; i++) {
                 tables[i].style.display = "none";
