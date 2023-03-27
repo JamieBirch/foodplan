@@ -17,6 +17,7 @@
         vm.foods = [];
         vm.getFoods = getFoods;
         vm.deleteFood = deleteFood;
+        vm.addFood = addFood;
 
         init();
 
@@ -74,6 +75,21 @@
                 getFoods();
             });
         }
+
+        function addFood(food) {
+            var url = "/food";
+            var myJson = JSON.stringify(food);
+            $http.post(url, myJson)
+                .then(function(response) {
+                  console.log('Food added:', response.data);
+                  getFoods();
+                })
+                .catch(function(error) {
+                  console.error('There was a problem adding the food:', error);
+                });
+        }
+
+        //Other
 
         function openTab(evt, tabName) {
             //TODO update table content by openTab call

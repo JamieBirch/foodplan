@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,7 +45,7 @@ public class FoodplanService {
         food.setProtein(foodRequest.getProtein());
         food.setRecipe(foodRequest.getRecipe());
 
-        List<IngredientInfo> ingredients = foodRequest.getIngredients().stream()
+        List<IngredientInfo> ingredients = Optional.ofNullable(foodRequest.getIngredients()).stream().flatMap(Collection::stream)
                 .map(ingredient -> {
                     IngredientInfo ingredientInfo = new IngredientInfo();
                     ingredientInfo.setFood(food);
