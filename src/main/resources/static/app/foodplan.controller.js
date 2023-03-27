@@ -26,27 +26,13 @@
             getIngredients();
         }
 
-        function getFoods() {
-            var url = "/food";
-            var foodplanPromise = $http.get(url);
-            foodplanPromise.then(function(response) {
-                vm.foods = response.data;
-            });
-        }
+        //Ingredients
 
         function getIngredients() {
             var url = "/ingredient";
             var foodplanPromise = $http.get(url);
             foodplanPromise.then(function(response) {
                 vm.ingredients = response.data;
-            });
-        }
-
-        function deleteFood(id) {
-            var url = "/food/" + id;
-            var foodplanPromise = $http.delete(url);
-            foodplanPromise.then(function(response) {
-                getFoods();
             });
         }
 
@@ -69,6 +55,24 @@
                 .catch(function(error) {
                     console.error('There was a problem adding the ingredient:', error);
                 });
+        }
+
+        //Foods
+
+        function getFoods() {
+            var url = "/food";
+            var foodplanPromise = $http.get(url);
+            foodplanPromise.then(function(response) {
+                vm.foods = response.data;
+            });
+        }
+
+        function deleteFood(id) {
+            var url = "/food/" + id;
+            var foodplanPromise = $http.delete(url);
+            foodplanPromise.then(function(response) {
+                getFoods();
+            });
         }
 
         function openTab(evt, tabName) {
