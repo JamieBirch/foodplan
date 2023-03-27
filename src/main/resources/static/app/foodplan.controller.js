@@ -7,13 +7,16 @@ angular.module('app', [])
 function FoodplanController($http) {
 var vm = this;
 
-vm.foods = [];
-vm.ingredients = [];
-vm.getFoods = getFoods;
-vm.getIngredients = getIngredients;
-vm.deleteFood = deleteFood;
-vm.deleteIngredient = deleteIngredient;
 vm.openTab = openTab;
+
+vm.ingredients = [];
+vm.getIngredients = getIngredients;
+vm.deleteIngredient = deleteIngredient;
+vm.addIngredient = addIngredient;
+
+vm.foods = [];
+vm.getFoods = getFoods;
+vm.deleteFood = deleteFood;
 
 init();
 
@@ -51,8 +54,21 @@ function deleteIngredient(id){
 var url = "/ingredient/" + id;
 var foodplanPromise = $http.delete(url);
 foodplanPromise.then(function(response){
+//getIngredients();
 vm.ingredients = response.data;
 });
+}
+
+function addIngredient(name){
+    var url = "/ingredient";
+    var myJson = { "name": name };
+    $http.post(url, myJson)
+        .then(function(response) {
+          console.log('Ingredient added:', response.data);
+        })
+        .catch(function(error) {
+          console.error('There was a problem adding the ingredient:', error);
+        });
 }
 
 function openTab(evt, tabName) {

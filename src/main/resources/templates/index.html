@@ -66,6 +66,14 @@
                 </tr>
                 </thead>
                 <tbody>
+                <tr>
+                    <td>
+                        <input type="text" ng-model="name" placeholder="Enter a new ingredient">
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" ng-click="vm.addIngredient(name)">Add</button>
+                    </td>
+                </tr>
                 <tr ng-repeat="ingredient in vm.ingredients">
                     <td>{{ingredient.name}}</td>
                     <td>
