@@ -7,7 +7,7 @@
     <th>description</th>
   </tr>
   <tr>
-    <td><a href="http://localhost:8080/api/swagger-ui.html">swagger api</a></td>
+    <td><a href="http://localhost:8080/swagger-ui.html#/">swagger api</a></td>
     <td>Link to localhost swagger api. Only works with a locally running web-service.</td>
   </tr>
   <tr>
