@@ -118,6 +118,19 @@
                 </tr>
             </table>
 
+            <table id="Created_Plan" class="table">
+                <tr ng-repeat="day in vm.plan.dayToFoods">
+                    <td>{{day.day}}</td>
+                    <td>{{day.dayStats.ccal}}</td>
+                    <td>{{day.dayStats.protein}}</td>
+                    <td>{{day.dayStats.fat}}</td>
+                    <td>{{day.dayStats.carbs}}</td>
+                    <td>
+                        <button class="btn btn-danger" ng-click="vm.deleteFood(food.id)">Delete</button>
+                    </td>
+                </tr>
+            </table>
+
         </div>
     </div>
 </div>

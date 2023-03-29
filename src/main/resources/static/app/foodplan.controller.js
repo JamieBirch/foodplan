@@ -19,6 +19,7 @@
         vm.deleteFood = deleteFood;
         vm.addFood = addFood;
 
+        vm.plan = null;
         vm.createPlan = createPlan;
 
         init();
@@ -97,11 +98,16 @@
             $http.post(url, myJson)
                 .then(function(response) {
                     console.log('Plan ready:', response.data);
-                    //getFoods();
+                    vm.plan = response.data;
+                    showPlan();
                 })
                 .catch(function(error) {
                     console.error('There was a problem planning:', error);
                 });
+        }
+
+        function showPlan() {
+            document.getElementById("Created_Plan").style.display = "table";
         }
 
         // Other

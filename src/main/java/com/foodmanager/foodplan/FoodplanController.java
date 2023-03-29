@@ -67,8 +67,8 @@ public class FoodplanController {
         foodplanService.deleteIngredient(id);
     }
 
-    @GetMapping("/plan")
-    public Plan getPlan(@RequestBody PlanConfiguration configuration) {
+    @PostMapping("/plan")
+    public Plan createPlan(@RequestBody PlanConfiguration configuration) {
         return foodplanService.createPlan(configuration);
     }
 }
