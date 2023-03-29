@@ -19,12 +19,12 @@
         vm.deleteFood = deleteFood;
         vm.addFood = addFood;
 
+        vm.createPlan = createPlan;
+
         init();
 
         function init() {
             disableAllTables();
-//            getFoods();
-//            getIngredients();
         }
 
         // Ingredients
@@ -89,6 +89,21 @@
                 });
         }
 
+        //Plan
+
+        function createPlan(planConfiguration) {
+            var url = "/plan";
+            var myJson = JSON.stringify(planConfiguration);
+            $http.post(url, myJson)
+                .then(function(response) {
+                    console.log('Plan ready:', response.data);
+                    //getFoods();
+                })
+                .catch(function(error) {
+                    console.error('There was a problem planning:', error);
+                });
+        }
+
         // Other
 
         function openTab(evt, tabName) {
@@ -100,6 +115,9 @@
                 case "Ingredients":
                     getIngredients();
                     break;
+//                case "Plan":
+//                    plan();
+//                    break;
                 default:
                     break;
             }

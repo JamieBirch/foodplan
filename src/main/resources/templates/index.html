@@ -29,7 +29,7 @@
 <!--                <button ng-click="vm.getFoods()" type="button" class="btn btn-default">Foods</button>-->
                 <button ng-click="vm.openTab(event, 'Foods')" type="button" class="btn btn-default">Foods</button>
                 <button ng-click="vm.openTab(event, 'Ingredients')" type="button" class="btn btn-default">Ingredients</button>
-                <button ng-click="vm.getPlan()" type="button" class="btn btn-default">Plan</button>
+                <button ng-click="vm.openTab(event, 'Plan')" type="button" class="btn btn-default">Plan</button>
             </div>
 
             <!-- Display bookings in a table -->
@@ -93,14 +93,34 @@
                 </tbody>
             </table>
 
+            <table id="Plan" class="table">
+                <thead>
+                <tr>
+                    <th>days</th>
+                    <th>ccal</th>
+                    <th>protein</th>
+                    <th>fat</th>
+                    <th>carbs</th>
+                    <th>marginOfError</th>
+                    <th style="width: 90px"></th>
+                </tr>
+                </thead>
+                <tr>
+                    <td><input type="number" ng-model="vm.newPlan.days"></td>
+                    <td><input type="number" ng-model="vm.newPlan.requirements.ccal"></td>
+                    <td><input type="number" ng-model="vm.newPlan.requirements.protein"></td>
+                    <td><input type="number" ng-model="vm.newPlan.requirements.fat"></td>
+                    <td><input type="number" ng-model="vm.newPlan.requirements.carbs"></td>
+                    <td><input type="number" ng-model="vm.newPlan.marginOfError"></td>
+                    <td>
+                        <button class="btn btn-primary" ng-click="vm.createPlan(vm.newPlan)">Add</button>
+                    </td>
+                </tr>
+            </table>
+
         </div>
     </div>
 </div>
 
-<footer class="footer" style="position: absolute; bottom:0;background-color: #f5f5f5; width: 100%">
-    <div class="container">
-        <p th:text="${#dates.format(datetime, 'dd MMM yyyy HH:mm')}"  class="text-muted">Page was rendered today.</p>
-    </div>
-</footer>
 </body>
 </html>
