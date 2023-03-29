@@ -101,7 +101,7 @@
                     <th>protein</th>
                     <th>fat</th>
                     <th>carbs</th>
-                    <th>marginOfError</th>
+                    <th>margin of error</th>
                     <th style="width: 90px"></th>
                 </tr>
                 </thead>
@@ -120,16 +120,39 @@
 
             <table id="Created_Plan" class="table">
                 <tr ng-repeat="day in vm.plan.dayToFoods">
-                    <td>{{day.day}}</td>
-                    <td>{{day.dayStats.ccal}}</td>
-                    <td>{{day.dayStats.protein}}</td>
-                    <td>{{day.dayStats.fat}}</td>
-                    <td>{{day.dayStats.carbs}}</td>
+                    <td><b>Day {{day.day}}</b></td>
                     <td>
-                        <button class="btn btn-danger" ng-click="vm.deleteFood(food.id)">Delete</button>
+                        <table class="table-bordered">
+                            <tr>
+                                <td>ccal</td>
+                                <td>{{day.dayStats.ccal}}</td>
+                            </tr>
+                            <tr>
+                                <td>protein</td>
+                                <td>{{day.dayStats.protein}}</td>
+                            </tr>
+                            <tr>
+                                <td>fat</td>
+                                <td>{{day.dayStats.fat}}</td>
+                            </tr>
+                            <tr>
+                                <td>carbs</td>
+                                <td>{{day.dayStats.carbs}}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <table class="table">
+                            <tr ng-repeat="food in day.foods">
+                                <td>{{food.name}}</td>
+<!--                                TODO: <li> for ingredients-->
+                                <td>{{food.recipe}}</td>
+                            </tr>
+                        </table>
                     </td>
                 </tr>
             </table>
+
 
         </div>
     </div>
