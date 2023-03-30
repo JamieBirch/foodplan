@@ -145,6 +145,15 @@
                         <table class="table">
                             <tr ng-repeat="food in day.foods">
                                 <td>{{food.name}}</td>
+                                <td>
+                                    <table class="table-bordered">
+                                        <tr ng-repeat="ingredient in food.ingredients">
+                                            <td>{{ingredient.ingredient.name}}</td>
+                                            <td>{{ingredient.howMuch}}</td>
+                                            <td>{{ingredient.uom}}</td>
+                                        </tr>
+                                    </table>
+                                </td>
 <!--                                TODO: <li> for ingredients-->
                                 <td>{{food.recipe}}</td>
                             </tr>
