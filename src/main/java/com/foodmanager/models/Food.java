@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,6 +43,7 @@ public class Food {
     @EqualsAndHashCode.Exclude
     private List<IngredientInfo> ingredients = new ArrayList<>();
 
+    @Column(columnDefinition = "TEXT")
     private String recipe;
 
 }

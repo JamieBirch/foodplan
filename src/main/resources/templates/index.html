@@ -41,6 +41,7 @@
                     <th>protein</th>
                     <th>fat</th>
                     <th>carbs</th>
+                    <th>Recipe</th>
                     <th style="width: 90px"></th>
                 </tr>
                 </thead>
@@ -50,6 +51,7 @@
                     <td><input type="number" ng-model="vm.newFood.protein"></td>
                     <td><input type="number" ng-model="vm.newFood.fat"></td>
                     <td><input type="number" ng-model="vm.newFood.carbs"></td>
+                    <td><textarea ng-model="vm.newFood.recipe"></textarea></td>
                     <td>
                         <button class="btn btn-primary" ng-click="vm.addFood(vm.newFood)">Add</button>
                     </td>
