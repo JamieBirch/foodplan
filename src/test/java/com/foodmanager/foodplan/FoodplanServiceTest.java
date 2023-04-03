@@ -14,8 +14,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class FoodplanServiceTest {
-
-    //TODO clean DB between test runs
     @Autowired
     private FoodplanService foodplanService;
 
