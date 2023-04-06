@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -6,6 +6,15 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 const MyGrid = () => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
+  const [rowData, setRowData] = useState([]);
+
+  useEffect(() => {
+    fetch("/ingredient")
+      .then((response) => response.json())
+      .then((data) => {
+        setRowData(data);
+      });
+  }, []);
 
   const onGridReady = (params) => {
     setGridApi(params.api);
@@ -13,15 +22,8 @@ const MyGrid = () => {
   };
 
   const columnDefs = [
-    { headerName: "Make", field: "make" },
-    { headerName: "Model", field: "model" },
-    { headerName: "Price", field: "price" },
-  ];
-
-  const rowData = [
-    { make: "Toyota", model: "Celica", price: 35000 },
-    { make: "Ford", model: "Mondeo", price: 32000 },
-    { make: "Porsche", model: "Boxter", price: 72000 },
+    { headerName: "Id", field: "id" },
+    { headerName: "Name", field: "name" },
   ];
 
   return (
