@@ -2,7 +2,7 @@
 
 const BASE_URL = "http://localhost:8080/ingredient";
 
-export const getIngredients2 = async () => {
+export const Ingredients = async () => {
   const response = await fetch(`${BASE_URL}`);
   return handleResponse(response);
 };

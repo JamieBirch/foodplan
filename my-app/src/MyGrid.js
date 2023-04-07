@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { getIngredients2 } from "./api/IngredientsAPI.js";
+import { Ingredients } from "./api/IngredientsAPI.js";
 
 const MyGrid = () => {
   const [gridApi, setGridApi] = useState(null);
@@ -19,7 +19,7 @@ const MyGrid = () => {
 
   useEffect(() => {
     const fetchIngredients = async () => {
-      const ingredients = await getIngredients2();
+      const ingredients = await Ingredients();
       setRowData(ingredients);
     };
 
@@ -38,7 +38,7 @@ const MyGrid = () => {
   ];
 
   return (
-    <div className="ag-theme-alpine" style={{ height: "500px", width: "600px" }}>
+    <div className="ag-theme-alpine" style={{ height: "90vw", width: "80vw", textAlign: "center" }}>
       <AgGridReact
         onGridReady={onGridReady}
         columnDefs={columnDefs}
