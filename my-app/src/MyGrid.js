@@ -8,6 +8,7 @@ const MyGrid = () => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
+  const [newIngredient, setNewIngredient] = useState("");
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -41,38 +42,21 @@ const MyGrid = () => {
     );
   };
 
-  const addCellRenderer = () => {
-    const [newIngredient, setNewIngredient] = useState("");
+  const handleAddIngredient = async () => {
+      if (gridApi !== null) {
+          const ingredient = await addIngredient(newIngredient);
+          setRowData([...rowData, ingredient]);
+          setNewIngredient("");
+      }
+  };
 
-    const onClick = async () => {
-        if (gridApi !== null) {
-            const ingredient = await addIngredient(newIngredient);
-            setRowData([...rowData, ingredient]);
-        }
-    };
-
-    const handleChange = (event) => {
-      setNewIngredient(event.target.value);
-    };
-
-    return (
-      <div>
-        <input type="text" value={newIngredient} onChange={handleChange} />
-        <button onClick={onClick}>
-          Add
-        </button>
-      </div>
-    );
+  const handleChange = (event) => {
+    setNewIngredient(event.target.value);
   };
 
   const columnDefs = [
     { headerName: "Id", field: "id" },
     { headerName: "Name", field: "name" },
-    {
-      headerName: "",
-      cellRenderer: addCellRenderer,
-      width: 200,
-    },
     {
       headerName: "",
       cellRenderer: deleteCellRenderer,
@@ -81,12 +65,20 @@ const MyGrid = () => {
   ];
 
   return (
-    <div className="ag-theme-alpine" style={{ height: "90vw", width: "80vw", textAlign: "center" }}>
-      <AgGridReact
-        onGridReady={onGridReady}
-        columnDefs={columnDefs}
-        rowData={rowData}
-      />
+    <div>
+      <div style={{ margin: "10px" }}>
+        <input type="text" value={newIngredient} onChange={handleChange} />
+        <button onClick={handleAddIngredient}>
+          Add
+        </button>
+      </div>
+      <div className="ag-theme-alpine" style={{ height: "80vh", width: "80vw", textAlign: "center" }}>
+        <AgGridReact
+          onGridReady={onGridReady}
+          columnDefs={columnDefs}
+          rowData={rowData}
+        />
+      </div>
     </div>
   );
 };

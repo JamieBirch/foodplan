@@ -25,36 +25,6 @@ export const addIngredient = async (name) => {
   return handleResponse(response);
 };
 
-
-/*export function getIngredients() {
-    var url = "/ingredient";
-    var foodplanPromise = $http.get(url);
-    return foodplanPromise.then(function(response) {
-        return response.data;
-    });
-}*/
-
-/*export function deleteIngredient(id) {
-    var url = "/ingredient/" + id;
-    var foodplanPromise = $http.delete(url);
-    return foodplanPromise.then(function(response) {
-        getIngredients();
-    });
-}
-
-export function addIngredient(name) {
-    var url = "/ingredient";
-    var myJson = { "name": name };
-    return $http.post(url, myJson)
-        .then(function(response) {
-            console.log('Ingredient added:', response.data);
-            getIngredients();
-        })
-        .catch(function(error) {
-            console.error('There was a problem adding the ingredient:', error);
-        });
-}*/
-
 // function to handle response from API
 const handleResponse = async (response) => {
   if (!response.ok) {
