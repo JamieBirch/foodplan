@@ -4,7 +4,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { Ingredients, deleteIngredient, addIngredient } from "./api/IngredientsAPI.js";
 
-const MyGrid = () => {
+const IngredientsGrid = () => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
@@ -83,4 +83,4 @@ const MyGrid = () => {
   );
 };
 
-export default MyGrid;
+export default IngredientsGrid;
