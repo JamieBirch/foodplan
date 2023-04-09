@@ -14,6 +14,18 @@ export const deleteIngredient = async (id) => {
   return handleResponse(response);
 };
 
+export const addIngredient = async (name) => {
+  const response = await fetch(`${BASE_URL}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ name }),
+  });
+  return handleResponse(response);
+};
+
+
 /*export function getIngredients() {
     var url = "/ingredient";
     var foodplanPromise = $http.get(url);
