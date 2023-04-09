@@ -51,8 +51,9 @@ public class FoodplanController {
 
     @PostMapping("/ingredient")
     @Transactional
-    public void addIngredient(@RequestBody IngredientRequest ingredient) {
+    public List<Ingredient> addIngredient(@RequestBody IngredientRequest ingredient) {
         foodplanService.addIngredient(ingredient);
+        return foodplanService.getIngredients();
     }
 
     @PostMapping("/ingredients")
@@ -63,8 +64,9 @@ public class FoodplanController {
 
     @DeleteMapping("/ingredient/{id}")
     @Transactional
-    public void deleteIngredient(@PathVariable long id) {
+    public List<Ingredient> deleteIngredient(@PathVariable long id) {
         foodplanService.deleteIngredient(id);
+        return foodplanService.getIngredients();
     }
 
     @PostMapping("/plan")

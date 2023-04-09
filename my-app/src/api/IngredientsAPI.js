@@ -7,6 +7,13 @@ export const Ingredients = async () => {
   return handleResponse(response);
 };
 
+export const deleteIngredient = async (id) => {
+  const response = await fetch(`${BASE_URL}/${id}`, {
+    method: "DELETE",
+  });
+  return handleResponse(response);
+};
+
 /*export function getIngredients() {
     var url = "/ingredient";
     var foodplanPromise = $http.get(url);
