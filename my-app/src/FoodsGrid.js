@@ -8,7 +8,14 @@ const FoodsGrid = () => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
-  const [newFood, setNewFood] = useState("");
+  const [newFood, setNewFood] = useState({
+    name: "",
+    ccal: "",
+    protein: "",
+    fat: "",
+    carbs: "",
+    recipe: "",
+  });
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -46,12 +53,23 @@ const FoodsGrid = () => {
       if (gridApi !== null) {
           const food = await addFood(newFood);
           setRowData([...rowData, food]);
-          setNewFood("");
+          setNewFood({
+                name: "",
+                ccal: "",
+                protein: "",
+                fat: "",
+                carbs: "",
+                recipe: "",
+          });
       }
   };
 
   const handleChange = (event) => {
-    setNewFood(event.target.value);
+    const { name, value } = event.target;
+    setNewFood((prevFood) => ({
+      ...prevFood,
+      [name]: value,
+    }));
   };
 
   const columnDefs = [
@@ -72,12 +90,54 @@ const FoodsGrid = () => {
   return (
     <div>
       <div style={{ margin: "10px" }}>
-        <input type="text" value={newFood} onChange={handleChange} />
-        <button onClick={handleAddFood}>
-          Add
-        </button>
+        <input
+          type="text"
+          value={newFood.name}
+          name="name"
+          placeholder="Name"
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          value={newFood.ccal}
+          name="ccal"
+          placeholder="Calories"
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          value={newFood.protein}
+          name="protein"
+          placeholder="Protein"
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          value={newFood.fat}
+          name="fat"
+          placeholder="Fats"
+          onChange={handleChange}
+        />
+        <input
+          type="number"
+          value={newFood.carbs}
+          name="carbs"
+          placeholder="Carbs"
+          onChange={handleChange}
+        />
+        <input
+          type="text"
+          value={newFood.recipe}
+          name="recipe"
+          placeholder="Recipe"
+          onChange={handleChange}
+        />
+        <button onClick={handleAddFood}>Add</button>
       </div>
-      <div className="ag-theme-alpine" style={{ height: "80vh", width: "80vw", textAlign: "center" }}>
+      <div
+        className="ag-theme-alpine"
+        style={{ height: "80vh", width: "80vw", textAlign: "center" }}
+      >
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}
