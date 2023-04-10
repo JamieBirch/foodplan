@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { Ingredients, deleteIngredient, addIngredient } from "./api/IngredientsAPI.js";
+import { getFoods, deleteFood, addFood } from "./api/FoodsAPI.js";
 
-const IngredientsGrid = () => {
+const FoodsGrid = () => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
-  const [newIngredient, setNewIngredient] = useState("");
+  const [newFood, setNewFood] = useState("");
 
   useEffect(() => {
-    const fetchIngredients = async () => {
-      const ingredients = await Ingredients();
-      setRowData(ingredients);
+    const fetchFoods = async () => {
+      const foods = await getFoods();
+      setRowData(foods);
     };
 
-    fetchIngredients();
+    fetchFoods();
   }, []);
 
   const onGridReady = (params) => {
@@ -30,7 +30,7 @@ const IngredientsGrid = () => {
         console.log("Delete button clicked");
         if (gridApi !== null) {
             console.log("Delete functionality used");
-            await deleteIngredient(params.data.id);
+            await deleteFood(params.data.id);
             gridApi.applyTransaction({ remove: [params.node] });
         }
     };
@@ -42,21 +42,26 @@ const IngredientsGrid = () => {
     );
   };
 
-  const handleAddIngredient = async () => {
+  const handleAddFood = async () => {
       if (gridApi !== null) {
-          const ingredient = await addIngredient(newIngredient);
-          setRowData([...rowData, ingredient]);
-          setNewIngredient("");
+          const food = await addFood(newFood);
+          setRowData([...rowData, food]);
+          setNewFood("");
       }
   };
 
   const handleChange = (event) => {
-    setNewIngredient(event.target.value);
+    setNewFood(event.target.value);
   };
 
   const columnDefs = [
     { headerName: "Id", field: "id" },
     { headerName: "Name", field: "name" },
+    { headerName: "Calories", field: "ccal" },
+    { headerName: "Protein", field: "protein" },
+    { headerName: "Fats", field: "fat" },
+    { headerName: "Carbs", field: "carbs" },
+    { headerName: "Recipe", field: "recipe" },
     {
       headerName: "",
       cellRenderer: deleteCellRenderer,
@@ -67,8 +72,8 @@ const IngredientsGrid = () => {
   return (
     <div>
       <div style={{ margin: "10px" }}>
-        <input type="text" value={newIngredient} onChange={handleChange} />
-        <button onClick={handleAddIngredient}>
+        <input type="text" value={newFood} onChange={handleChange} />
+        <button onClick={handleAddFood}>
           Add
         </button>
       </div>
@@ -83,4 +88,4 @@ const IngredientsGrid = () => {
   );
 };
 
-export default IngredientsGrid;
+export default FoodsGrid;
