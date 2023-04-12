@@ -27,11 +27,9 @@ const IngredientsGrid = () => {
 
   const deleteCellRenderer = (params) => {
     const onClick = async () => {
-        console.log("Delete button clicked");
         if (gridApi !== null) {
-            console.log("Delete functionality used");
-            await deleteIngredient(params.data.id);
-            gridApi.applyTransaction({ remove: [params.node] });
+            const updatedIngredients = await deleteIngredient(params.data.id);
+            setRowData(updatedIngredients);
         }
     };
 
@@ -45,8 +43,11 @@ const IngredientsGrid = () => {
   const handleAddIngredient = async () => {
       if (gridApi !== null) {
           const ingredient = await addIngredient(newIngredient);
-          setRowData([...rowData, ingredient]);
           setNewIngredient("");
+
+          // fetch the updated ingredient list from the server
+          const updatedIngredients = await Ingredients();
+          setRowData(updatedIngredients);
       }
   };
 
