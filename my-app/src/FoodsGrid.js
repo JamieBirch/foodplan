@@ -150,7 +150,7 @@ const FoodsGrid = () => {
       </div>
       <div
         className="ag-theme-alpine"
-        style={{ height: "80vh", width: "80vw", textAlign: "center" }}
+        style={{ height: "80vh", width: "80vw", textAlign: "left" }}
       >
         <AgGridReact
           onGridReady={onGridReady}

@@ -70,7 +70,7 @@ const IngredientsGrid = () => {
           Add
         </button>
       </div>
-      <div className="ag-theme-alpine" style={{ height: "80vh", width: "80vw", textAlign: "center" }}>
+      <div className="ag-theme-alpine" style={{ height: "80vh", width: "80vw", textAlign: "left" }}>
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}
