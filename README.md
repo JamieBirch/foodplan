@@ -19,3 +19,12 @@
     <td>Link to travis CI tool. You can check all the build information of the project there.</td>
   </tr>
 </table>
+
+### How to run:
+
+1. Run BE
+2. To run FE,
+cd .\my-app\
+npm start  
+
+project should launch at http://localhost:3000    
