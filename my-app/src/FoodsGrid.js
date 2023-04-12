@@ -37,8 +37,9 @@ const FoodsGrid = () => {
         console.log("Delete button clicked");
         if (gridApi !== null) {
             console.log("Delete functionality used");
-            await deleteFood(params.data.id);
-            gridApi.applyTransaction({ remove: [params.node] });
+            const updatedFoods = await deleteFood(params.data.id);
+//            gridApi.applyTransaction({ remove: [params.node] });
+            setRowData(updatedFoods);
         }
     };
 
@@ -51,8 +52,8 @@ const FoodsGrid = () => {
 
   const handleAddFood = async () => {
       if (gridApi !== null) {
-          const food = await addFood(newFood);
-          setRowData([...rowData, food]);
+          const updatedFoods = await addFood(newFood);
+          setRowData(updatedFoods);
           setNewFood({
                 name: "",
                 ccal: "",

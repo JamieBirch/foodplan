@@ -34,14 +34,16 @@ public class FoodplanController {
 
     @PostMapping("/food")
     @Transactional
-    public void addFood(@RequestBody FoodRequest food) {
+    public List<Food> addFood(@RequestBody FoodRequest food) {
         foodplanService.addFood(food);
+        return foodplanService.getFoods();
     }
 
     @DeleteMapping("/food/{id}")
     @Transactional
-    public void deleteFood(@PathVariable long id) {
+    public List<Food> deleteFood(@PathVariable long id) {
         foodplanService.deleteFood(id);
+        return foodplanService.getFoods();
     }
 
     @GetMapping("/ingredient")
