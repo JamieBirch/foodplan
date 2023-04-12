@@ -38,7 +38,6 @@ const FoodsGrid = () => {
         if (gridApi !== null) {
             console.log("Delete functionality used");
             const updatedFoods = await deleteFood(params.data.id);
-//            gridApi.applyTransaction({ remove: [params.node] });
             setRowData(updatedFoods);
         }
     };
@@ -73,6 +72,14 @@ const FoodsGrid = () => {
     }));
   };
 
+  const recipeCellRenderer = (params) => {
+    return (
+      <div style={{ whiteSpace: "normal" }}>
+        {params.value}
+      </div>
+    );
+  };
+
   const columnDefs = [
     { headerName: "Id", field: "id" },
     { headerName: "Name", field: "name" },
@@ -80,7 +87,12 @@ const FoodsGrid = () => {
     { headerName: "Protein", field: "protein" },
     { headerName: "Fats", field: "fat" },
     { headerName: "Carbs", field: "carbs" },
-    { headerName: "Recipe", field: "recipe" },
+    {
+      headerName: "Recipe",
+      field: "recipe",
+      cellRenderer: recipeCellRenderer,
+      autoHeight: true
+    },
     {
       headerName: "",
       cellRenderer: deleteCellRenderer,
@@ -126,12 +138,13 @@ const FoodsGrid = () => {
           placeholder="Carbs"
           onChange={handleChange}
         />
-        <input
-          type="text"
+        <textarea
           value={newFood.recipe}
           name="recipe"
           placeholder="Recipe"
           onChange={handleChange}
+          rows="4"
+          cols="50"
         />
         <button onClick={handleAddFood}>Add</button>
       </div>
