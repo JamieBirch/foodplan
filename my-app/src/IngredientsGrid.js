@@ -42,12 +42,9 @@ const IngredientsGrid = () => {
 
   const handleAddIngredient = async () => {
       if (gridApi !== null) {
-          const ingredient = await addIngredient(newIngredient);
-          setNewIngredient("");
-
-          // fetch the updated ingredient list from the server
-          const updatedIngredients = await Ingredients();
+          const updatedIngredients = await addIngredient(newIngredient);
           setRowData(updatedIngredients);
+          setNewIngredient("");
       }
   };
 
