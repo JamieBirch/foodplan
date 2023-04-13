@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
+import Select from "react-select";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { getFoods, deleteFood, addFood } from "./api/FoodsAPI.js";
+import { Ingredients } from "./api/IngredientsAPI.js";
 
 const FoodsGrid = () => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
   const [newFood, setNewFood] = useState({
     name: "",
     ccal: "",
@@ -16,6 +19,18 @@ const FoodsGrid = () => {
     carbs: "",
     recipe: "",
   });
+
+useEffect(() => {
+  const fetchIngredients = async () => {
+    const ingredientsData = await Ingredients();
+    const options = ingredientsData.map((ingredient) => ({
+      value: ingredient.id,
+      label: ingredient.name,
+    }));
+    setIngredients(options);
+  };
+  fetchIngredients();
+}, []);
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -49,20 +64,27 @@ const FoodsGrid = () => {
     );
   };
 
-  const handleAddFood = async () => {
-      if (gridApi !== null) {
-          const updatedFoods = await addFood(newFood);
-          setRowData(updatedFoods);
-          setNewFood({
-                name: "",
-                ccal: "",
-                protein: "",
-                fat: "",
-                carbs: "",
-                recipe: "",
-          });
-      }
-  };
+const handleAddFood = async () => {
+  if (gridApi !== null) {
+    const updatedFoods = await addFood(newFood);
+    setRowData(updatedFoods);
+    setNewFood({
+      name: "",
+      ccal: "",
+      protein: "",
+      fat: "",
+      carbs: "",
+      recipe: "",
+    });
+  }
+};
+
+const handleIngredientChange = (selectedOption) => {
+  setNewFood((prevFood) => ({
+    ...prevFood,
+    ingredientId: selectedOption ? selectedOption.value : null,
+  }));
+};
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -92,6 +114,10 @@ const FoodsGrid = () => {
       field: "recipe",
       cellRenderer: recipeCellRenderer,
       autoHeight: true
+    },
+    {
+      headerName: "Ingredients",
+      field: "ingredients"
     },
     {
       headerName: "",
@@ -145,6 +171,19 @@ const FoodsGrid = () => {
           onChange={handleChange}
           rows="4"
           cols="50"
+        />
+        <Select
+           value={ingredients.filter((option) => option.value === newFood.ingredientId)}
+           onChange={handleIngredientChange}
+           options={ingredients}
+           placeholder="Select an ingredient"
+        />
+        <input
+           type="number"
+           value={newFood.amount}
+           name="amount"
+           placeholder="Amount"
+           onChange={handleChange}
         />
         <button onClick={handleAddFood}>Add</button>
       </div>
