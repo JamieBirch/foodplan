@@ -51,7 +51,7 @@ public class FoodplanService {
                     ingredientInfo.setFood(food);
                     ingredientInfo.setHowMuch(ingredient.getHowMuch());
                     ingredientInfo.setUom(ingredient.getUom());
-                    Long ingredientId = ingredient.getIngredient();
+                    Long ingredientId = ingredient.getId();
                     Ingredient dbIngredient = ingredientRepository.findById(ingredientId)
                             .orElseThrow(() -> new RuntimeException(String.format("can't find ingredient with id %d", ingredientId)));
                     ingredientInfo.setIngredient(dbIngredient);

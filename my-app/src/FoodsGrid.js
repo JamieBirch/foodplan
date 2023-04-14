@@ -98,32 +98,28 @@ const handleAddFood = async () => {
 const handleIngredientChange = (selectedOption) => {
   // get the selected ingredient object from the ingredients array
   const selectedIngredient = ingredients.find((ingredient) => ingredient.id === selectedOption.value);
-  // create a new ingredient object with the selected ingredient id, amount and uom
-  const newIngredient = {
-    ingredient: selectedOption.value,
-    howMuch: newFood.amount,
-    uom: newFood.uom,
-  };
-  // add the new ingredient to the ingredients array in the newFood state
-  setNewFood((prevFood) => ({
-    ...prevFood,
-    ingredients: [...prevFood.ingredients, newIngredient],
+
+  // update the new ingredient object with the selected ingredient id
+  setNewIngredient((prevIngredient) => ({
+    ...prevIngredient,
+    ingredientId: selectedOption.value,
   }));
 };
 
 const handleHowMuchChange = (event) => {
-  setNewIngredient(prevIngredient => ({
+  setNewIngredient((prevIngredient) => ({
     ...prevIngredient,
-    howMuch: event.target.value
+    howMuch: event.target.value,
   }));
 };
 
 const handleUomChange = (selectedOption) => {
-  setNewFood((prevFood) => ({
-    ...prevFood,
+  setNewIngredient((prevIngredient) => ({
+    ...prevIngredient,
     uom: selectedOption ? selectedOption.value : null,
   }));
 };
+
 
 
   const handleChange = (event) => {

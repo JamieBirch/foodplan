@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IngredientInfoRequest {
-    private Long ingredient;
+    private Long id;
     private Integer howMuch;
     private UnitOfMeasure uom;
 }
