@@ -18,9 +18,22 @@ const FoodsGrid = () => {
     fat: "",
     carbs: "",
     recipe: "",
-//    ingredients: [],
-    amount: 0,
+    ingredients: [],
   });
+  const [newIngredient, setNewIngredient] = useState({
+    ingredientId: null,
+    howMuch: 0,
+    uom: ""
+  });
+  const uoms = [
+    { value: 'GRAM', label: 'g' },
+    { value: 'UNIT', label: 'un' },
+    { value: 'TBSP', label: 'tablespoon' },
+    { value: 'TSP', label: 'teaspoon' },
+    { value: 'ML', label: 'ml' },
+    // Add more options as needed
+    //TODO duplicates public enum UnitOfMeasure
+  ];
 
 useEffect(() => {
   const fetchIngredients = async () => {
@@ -77,16 +90,41 @@ const handleAddFood = async () => {
       fat: "",
       carbs: "",
       recipe: "",
+      ingredients: [],
     });
   }
 };
 
 const handleIngredientChange = (selectedOption) => {
+  // get the selected ingredient object from the ingredients array
+  const selectedIngredient = ingredients.find((ingredient) => ingredient.id === selectedOption.value);
+  // create a new ingredient object with the selected ingredient id, amount and uom
+  const newIngredient = {
+    ingredient: selectedOption.value,
+    howMuch: newFood.amount,
+    uom: newFood.uom,
+  };
+  // add the new ingredient to the ingredients array in the newFood state
   setNewFood((prevFood) => ({
     ...prevFood,
-    ingredientId: selectedOption ? selectedOption.value : null,
+    ingredients: [...prevFood.ingredients, newIngredient],
   }));
 };
+
+const handleHowMuchChange = (event) => {
+  setNewIngredient(prevIngredient => ({
+    ...prevIngredient,
+    howMuch: event.target.value
+  }));
+};
+
+const handleUomChange = (selectedOption) => {
+  setNewFood((prevFood) => ({
+    ...prevFood,
+    uom: selectedOption ? selectedOption.value : null,
+  }));
+};
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -94,6 +132,29 @@ const handleIngredientChange = (selectedOption) => {
       ...prevFood,
       [name]: value,
     }));
+  };
+
+  const handleAddIngredient = () => {
+    if (!newIngredient.ingredientId || !newIngredient.howMuch || !newIngredient.uom) {
+      return;
+    }
+
+    const ingredient = {
+      id: newIngredient.ingredientId,
+      howMuch: newIngredient.howMuch,
+      uom: newIngredient.uom
+    };
+
+    setNewFood(prevFood => ({
+      ...prevFood,
+      ingredients: [...prevFood.ingredients, ingredient]
+    }));
+
+    setNewIngredient({
+      ingredientId: null,
+      howMuch: "",
+      uom: ""
+    });
   };
 
   const recipeCellRenderer = (params) => {
@@ -110,7 +171,7 @@ const handleIngredientChange = (selectedOption) => {
       <div style={{ whiteSpace: "normal" }}>
         {ingredients.map((ingredient) => (
           <div key={ingredient.id}>
-            {ingredient.ingredient.id} - {ingredient.ingredient.name} - {ingredient.howMuch} {ingredient.uom}
+            {ingredient.ingredient.name} - {ingredient.howMuch} {ingredient.uom}
           </div>
         ))}
       </div>
@@ -191,18 +252,27 @@ const handleIngredientChange = (selectedOption) => {
           cols="50"
         />
         <Select
-           value={ingredients.filter((option) => option.value === newFood.ingredientId)}
-           onChange={handleIngredientChange}
-           options={ingredients}
-           placeholder="Select an ingredient"
-        />
-        <input
-           type="number"
-           value={newFood.amount}
-           name="amount"
-           placeholder="Amount"
-           onChange={handleChange}
-        />
+              value={ingredients.filter((option) => option.value === newIngredient.ingredientId)}
+              onChange={handleIngredientChange}
+              options={ingredients}
+              placeholder="Select an ingredient"
+            />
+
+            <input
+              type="number"
+              value={newIngredient.howMuch}
+              onChange={handleHowMuchChange}
+              placeholder="HowMuch"
+            />
+
+            <Select
+              value={newFood.uom}
+              onChange={handleUomChange}
+              options={uoms}
+              placeholder="Select a unit of measurement"
+            />
+
+            <button onClick={handleAddIngredient}>Add Ingredient</button>
         <button onClick={handleAddFood}>Add</button>
       </div>
       <div
