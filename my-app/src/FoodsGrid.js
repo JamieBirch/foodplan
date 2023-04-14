@@ -18,6 +18,8 @@ const FoodsGrid = () => {
     fat: "",
     carbs: "",
     recipe: "",
+//    ingredients: [],
+    amount: 0,
   });
 
 useEffect(() => {
@@ -102,6 +104,20 @@ const handleIngredientChange = (selectedOption) => {
     );
   };
 
+  const ingredientsCellRenderer = (params) => {
+    const ingredients = params.value;
+    return (
+      <div style={{ whiteSpace: "normal" }}>
+        {ingredients.map((ingredient) => (
+          <div key={ingredient.id}>
+            {ingredient.ingredient.id} - {ingredient.ingredient.name} - {ingredient.howMuch} {ingredient.uom}
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+
   const columnDefs = [
     { headerName: "Id", field: "id" },
     { headerName: "Name", field: "name" },
@@ -117,7 +133,9 @@ const handleIngredientChange = (selectedOption) => {
     },
     {
       headerName: "Ingredients",
-      field: "ingredients"
+      field: "ingredients",
+      cellRenderer: ingredientsCellRenderer,
+      autoHeight: true
     },
     {
       headerName: "",
