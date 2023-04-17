@@ -176,21 +176,18 @@ const handleUomChange = (selectedOption) => {
                 options={ingredients}
                 placeholder="Select an ingredient"
               />
-
               <input
                 type="number"
                 value={newIngredient.howMuch}
                 onChange={handleHowMuchChange}
                 placeholder="HowMuch"
               />
-
               <Select
                 value={newFood.uom}
                 onChange={handleUomChange}
                 options={uoms}
                 placeholder="Select a unit of measurement"
               />
-
               <button onClick={handleAddIngredient}>Add Ingredient</button>
           <button onClick={handleAddFood}>Add</button>
         </div>

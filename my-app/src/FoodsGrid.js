@@ -3,11 +3,13 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { getFoods, deleteFood } from "./api/FoodsAPI.js";
+import AddFoodUI from "./AddFoodUI";
 
 const FoodsGrid = () => {
   const [gridApi, setGridApi] = useState(null);
   const [gridColumnApi, setGridColumnApi] = useState(null);
   const [rowData, setRowData] = useState([]);
+  const [showAddFoodUI, setShowAddFoodUI] = useState(false);
 
   useEffect(() => {
     const fetchFoods = async () => {
@@ -24,7 +26,7 @@ const FoodsGrid = () => {
     console.log("Grid is ready");
   };
 
-//CELL RENDERERS
+  //CELL RENDERERS
 
   const recipeCellRenderer = (params) => {
     return (
@@ -49,12 +51,12 @@ const FoodsGrid = () => {
 
   const deleteCellRenderer = (params) => {
     const onClick = async () => {
-        console.log("Delete button clicked");
-        if (gridApi !== null) {
-            console.log("Delete functionality used");
-            const updatedFoods = await deleteFood(params.data.id);
-            setRowData(updatedFoods);
-        }
+      console.log("Delete button clicked");
+      if (gridApi !== null) {
+        console.log("Delete functionality used");
+        const updatedFoods = await deleteFood(params.data.id);
+        setRowData(updatedFoods);
+      }
     };
 
     return (
@@ -64,7 +66,7 @@ const FoodsGrid = () => {
     );
   };
 
-  const columnDefs = [
+const columnDefs = [
     { headerName: "Id", field: "id" },
     { headerName: "Name", field: "name" },
     { headerName: "Calories", field: "ccal" },
@@ -91,6 +93,13 @@ const FoodsGrid = () => {
   ];
 
   return (
+    <>
+      <div style={{ textAlign: "left" }}>
+        <button onClick={() => setShowAddFoodUI(!showAddFoodUI)}>
+          {showAddFoodUI ? "Hide" : "Add Food"}
+        </button>
+      </div>
+      {showAddFoodUI && <AddFoodUI />}
       <div
         className="ag-theme-alpine"
         style={{ height: "80vh", width: "80vw", textAlign: "left" }}
@@ -101,6 +110,7 @@ const FoodsGrid = () => {
           rowData={rowData}
         />
       </div>
+    </>
   );
 };
 

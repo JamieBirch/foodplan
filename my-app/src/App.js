@@ -27,12 +27,7 @@ function App() {
         <button onClick={handleShowFoods}>Foods</button>
       </div>
       {showIngredients && <IngredientsGrid />}
-      {showFoods && (
-          <React.Fragment>
-            <FoodsGrid />
-            <AddFoodUI />
-          </React.Fragment>
-        )}
+      {showFoods && <FoodsGrid />}
     </div>
   );
 }
