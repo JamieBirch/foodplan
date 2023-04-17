@@ -1,7 +1,9 @@
 import logo from './logo.svg';
 import "./App.css";
+import React from "react";
 import IngredientsGrid from "./IngredientsGrid";
 import FoodsGrid from "./FoodsGrid";
+import AddFoodUI from "./AddFoodUI";
 import { useState } from "react";
 
 function App() {
@@ -25,7 +27,12 @@ function App() {
         <button onClick={handleShowFoods}>Foods</button>
       </div>
       {showIngredients && <IngredientsGrid />}
-      {showFoods && <FoodsGrid />}
+      {showFoods && (
+          <React.Fragment>
+            <FoodsGrid />
+            <AddFoodUI />
+          </React.Fragment>
+        )}
     </div>
   );
 }
