@@ -62,22 +62,7 @@ useEffect(() => {
     console.log("Grid is ready");
   };
 
-  const deleteCellRenderer = (params) => {
-    const onClick = async () => {
-        console.log("Delete button clicked");
-        if (gridApi !== null) {
-            console.log("Delete functionality used");
-            const updatedFoods = await deleteFood(params.data.id);
-            setRowData(updatedFoods);
-        }
-    };
 
-    return (
-      <button onClick={onClick}>
-        Delete
-      </button>
-    );
-  };
 
 const handleAddFood = async () => {
   if (gridApi !== null) {
@@ -94,6 +79,29 @@ const handleAddFood = async () => {
     });
   }
 };
+
+  const handleAddIngredient = () => {
+    if (!newIngredient.ingredientId || !newIngredient.howMuch || !newIngredient.uom) {
+      return;
+    }
+
+    const ingredient = {
+      id: newIngredient.ingredientId,
+      howMuch: newIngredient.howMuch,
+      uom: newIngredient.uom
+    };
+
+    setNewFood(prevFood => ({
+      ...prevFood,
+      ingredients: [...prevFood.ingredients, ingredient]
+    }));
+
+    setNewIngredient({
+      ingredientId: null,
+      howMuch: "",
+      uom: ""
+    });
+  };
 
 const handleIngredientChange = (selectedOption) => {
   // get the selected ingredient object from the ingredients array
@@ -120,8 +128,6 @@ const handleUomChange = (selectedOption) => {
   }));
 };
 
-
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setNewFood((prevFood) => ({
@@ -130,28 +136,9 @@ const handleUomChange = (selectedOption) => {
     }));
   };
 
-  const handleAddIngredient = () => {
-    if (!newIngredient.ingredientId || !newIngredient.howMuch || !newIngredient.uom) {
-      return;
-    }
 
-    const ingredient = {
-      id: newIngredient.ingredientId,
-      howMuch: newIngredient.howMuch,
-      uom: newIngredient.uom
-    };
 
-    setNewFood(prevFood => ({
-      ...prevFood,
-      ingredients: [...prevFood.ingredients, ingredient]
-    }));
-
-    setNewIngredient({
-      ingredientId: null,
-      howMuch: "",
-      uom: ""
-    });
-  };
+//CELL RENDERERS
 
   const recipeCellRenderer = (params) => {
     return (
@@ -174,6 +161,22 @@ const handleUomChange = (selectedOption) => {
     );
   };
 
+  const deleteCellRenderer = (params) => {
+    const onClick = async () => {
+        console.log("Delete button clicked");
+        if (gridApi !== null) {
+            console.log("Delete functionality used");
+            const updatedFoods = await deleteFood(params.data.id);
+            setRowData(updatedFoods);
+        }
+    };
+
+    return (
+      <button onClick={onClick}>
+        Delete
+      </button>
+    );
+  };
 
   const columnDefs = [
     { headerName: "Id", field: "id" },
