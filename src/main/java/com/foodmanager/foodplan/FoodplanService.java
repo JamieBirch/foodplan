@@ -96,4 +96,9 @@ public class FoodplanService {
     public void deleteIngredient(long id) {
         ingredientRepository.deleteById(id);
     }
+
+    @Transactional
+    public void deleteAllFoods() {
+        foodRepository.deleteAll();
+    }
 }

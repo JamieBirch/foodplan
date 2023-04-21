@@ -46,6 +46,13 @@ public class FoodplanController {
         return foodplanService.getFoods();
     }
 
+    @DeleteMapping("/food/all")
+    @Transactional
+    public List<Food> deleteFood() {
+        foodplanService.deleteAllFoods();
+        return foodplanService.getFoods();
+    }
+
     @GetMapping("/ingredient")
     public List<Ingredient> getIngredients() {
         return foodplanService.getIngredients();
