@@ -31,6 +31,7 @@ const AddFoodUI = () => {
         // Add more options as needed
         //TODO duplicates public enum UnitOfMeasure
     ];
+//    const event = new CustomEvent('foodAdded');
 
 useEffect(() => {
   const fetchIngredients = async () => {
@@ -44,20 +45,23 @@ useEffect(() => {
   fetchIngredients();
 }, []);
 
-
-
 const handleAddFood = async () => {
-    const updatedFoods = await addFood(newFood);
-//    setRowData(updatedFoods);
-    setNewFood({
-      name: "",
-      ccal: "",
-      protein: "",
-      fat: "",
-      carbs: "",
-      recipe: "",
-      ingredients: [],
-    });
+  const updatedFoods = await addFood(newFood);
+  setNewFood({
+    name: "",
+    ccal: "",
+    protein: "",
+    fat: "",
+    carbs: "",
+    recipe: "",
+    ingredients: [],
+  });
+  // Update the foods state to reflect the new food
+//  setFoods(prevFoods => [...prevFoods, updatedFoods]);
+  const event = new CustomEvent('foodAdded', { value: newFood });
+  window.dispatchEvent(event);
+  // Optionally, display a success message to the user
+  alert('Food added successfully!');
 };
 
   const handleAddIngredient = () => {

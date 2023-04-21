@@ -11,6 +11,15 @@ const FoodsGrid = () => {
   const [rowData, setRowData] = useState([]);
   const [showAddFoodUI, setShowAddFoodUI] = useState(false);
 
+   const handleAddFood = () => {
+     const fetchFoods = async () => {
+       const foods = await getFoods();
+       setRowData(foods);
+     };
+
+     fetchFoods();
+   };
+
   useEffect(() => {
     const fetchFoods = async () => {
       const foods = await getFoods();
@@ -37,6 +46,8 @@ const FoodsGrid = () => {
   };
 
   const ingredientsCellRenderer = (params) => {
+    console.log('params:', params);
+    console.log('params.value:', params.value);
     const ingredients = params.value;
     return (
       <div style={{ whiteSpace: "normal" }}>
@@ -91,6 +102,8 @@ const columnDefs = [
       width: 100,
     },
   ];
+
+  window.addEventListener('foodAdded', handleAddFood);
 
   return (
     <>
