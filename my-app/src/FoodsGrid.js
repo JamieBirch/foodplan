@@ -107,9 +107,9 @@ const columnDefs = [
 
   return (
     <>
-      <div style={{ textAlign: "left" }}>
+      <div style={{ margin: "10px", textAlign: "center" }}>
         <button onClick={() => setShowAddFoodUI(!showAddFoodUI)}>
-          {showAddFoodUI ? "Hide" : "Add Food"}
+          {showAddFoodUI ? "Hide" : "Add New Food"}
         </button>
       </div>
       {showAddFoodUI && <AddFoodUI />}

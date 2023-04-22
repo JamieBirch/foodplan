@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="App">
-      <div>
+      <div style={{ margin: "10px" }}>
         <button onClick={handleShowIngredients}>Ingredients</button>
         <button onClick={handleShowFoods}>Foods</button>
       </div>
