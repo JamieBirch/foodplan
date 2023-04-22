@@ -59,8 +59,6 @@ const FoodsGrid = () => {
     };
 
     const ingredientsCellRenderer = (params) => {
-        console.log('params:', params);
-        console.log('params.value:', params.value);
         const ingredients = params.value;
         return ( <
             div style = {

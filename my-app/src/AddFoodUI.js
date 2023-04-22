@@ -156,187 +156,106 @@ const AddFoodUI = () => {
         );
     };
 
-    return ( <
-        div >
-        <
-        div style = {
-            {
-                margin: "10px",
-                display: "flex"
-            }
-        } > {
-            /* 1st column */ } <
-        div style = {
-            {
-                flex: 1
-            }
-        } >
-        <
-        input type = "text"
-        value = {
-            newFood.name
-        }
-        name = "name"
-        placeholder = "Name"
-        onChange = {
-            handleChange
-        }
-        /> <
-        /div> {
-            /* 2nd column */ } <
-        div style = {
-            {
-                flex: 1
-            }
-        } >
-        <
-        div style = {
-            {
-                marginBottom: '3px'
-            }
-        } >
-        <
-        input type = "number"
-        value = {
-            newFood.protein
-        }
-        name = "protein"
-        placeholder = "Protein"
-        onChange = {
-            handleChange
-        }
-        /> <
-        /div> <
-        div style = {
-            {
-                marginBottom: '3px'
-            }
-        } >
-        <
-        input type = "number"
-        value = {
-            newFood.fat
-        }
-        name = "fat"
-        placeholder = "Fats"
-        onChange = {
-            handleChange
-        }
-        /> <
-        /div> <
-        div style = {
-            {
-                marginBottom: '3px'
-            }
-        } >
-        <
-        input type = "number"
-        value = {
-            newFood.carbs
-        }
-        name = "carbs"
-        placeholder = "Carbs"
-        onChange = {
-            handleChange
-        }
-        /> <
-        /div> <
-        div style = {
-            {
-                marginBottom: '3px'
-            }
-        } >
-        <
-        input type = "number"
-        value = {
-            newFood.ccal
-        }
-        name = "ccal"
-        placeholder = "Calories"
-        onChange = {
-            handleChange
-        }
-        /> <
-        /div> <
-        /div> {
-            /* 3rd column */ } <
-        div style = {
-            {
-                flex: 1
-            }
-        } >
-        <
-        Select value = {
-            ingredients.filter(
-                (option) => option.value === newIngredient.ingredientId
-            )
-        }
-        onChange = {
-            handleIngredientChange
-        }
-        options = {
-            ingredients
-        }
-        placeholder = "Select an ingredient" /
-        >
-        <
-        input type = "number"
-        value = {
-            newIngredient.howMuch
-        }
-        onChange = {
-            handleHowMuchChange
-        }
-        placeholder = "HowMuch" /
-        >
-        <
-        Select value = {
-            newFood.uom
-        }
-        onChange = {
-            handleUomChange
-        }
-        options = {
-            uoms
-        }
-        placeholder = "Select a unit of measurement" /
-        >
-        <
-        button onClick = {
-            handleAddIngredient
-        } > Add Ingredient < /button> <
-        /div> {
-            /* 4th column */ } <
-        div style = {
-            {
-                flex: 1
-            }
-        } >
-        <
-        textarea value = {
-            newFood.recipe
-        }
-        name = "recipe"
-        placeholder = "Recipe"
-        onChange = {
-            handleChange
-        }
-        rows = "4"
-        cols = "50" /
-        >
-        <
-        /div> <
-        /div> <
-        button style = {
-            {
-                margin: "10px"
-            }
-        }
-        onClick = {
-            handleAddFood
-        } > Add Food < /button> <
-        /div>
-    );
+return (
+  <div>
+    <div style={{ margin: "10px", display: "flex" }}>
+      {/* 1st column */}
+      <div style={{ flex: 1 }}>
+        <input
+          type="text"
+          value={newFood.name}
+          name="name"
+          placeholder="Name"
+          onChange={handleChange}
+        />
+      </div>
+      {/* 2nd column */}
+      <div style={{ flex: 1 }}>
+        <div style={{ marginBottom: '3px' }}>
+          <input
+            type="number"
+            value={newFood.protein}
+            name="protein"
+            placeholder="Protein"
+            onChange={handleChange}
+          />
+        </div>
+        <div style={{ marginBottom: '3px' }}>
+          <input
+            type="number"
+            value={newFood.fat}
+            name="fat"
+            placeholder="Fats"
+            onChange={handleChange}
+          />
+        </div>
+        <div style={{ marginBottom: '3px' }}>
+          <input
+            type="number"
+            value={newFood.carbs}
+            name="carbs"
+            placeholder="Carbs"
+            onChange={handleChange}
+          />
+        </div>
+        <div style={{ marginBottom: '3px' }}>
+          <input
+            type="number"
+            value={newFood.ccal}
+            name="ccal"
+            placeholder="Calories"
+            onChange={handleChange}
+          />
+        </div>
+      </div>
+      {/* 3rd column */}
+      <div style={{ flex: 1 }}>
+        <Select
+          value={ingredients.filter(option => option.value === newIngredient.ingredientId)}
+          onChange={handleIngredientChange}
+          options={ingredients}
+          placeholder="Select an ingredient"
+        />
+        <input
+          type="number"
+          value={newIngredient.howMuch}
+          onChange={handleHowMuchChange}
+          placeholder="HowMuch"
+        />
+        <Select
+          value={newFood.uom}
+          onChange={handleUomChange}
+          options={uoms}
+          placeholder="Select a unit of measurement"
+        />
+        <button onClick={handleAddIngredient}>Add Ingredient</button>
+      </div>
+      {/* 4th column */}
+      <div style={{ flex: 1 }}>
+        <ul>
+                  {newFood.ingredients.map((ingredient, index) => (
+                    <li key={index}>{ingredient.id} - {ingredient.howMuch} - {ingredient.uom} </li>
+                  ))}
+        </ul>
+      </div>
+      {/* 5th column */}
+      <div style={{ flex: 1 }}>
+        <textarea
+          value={newFood.recipe}
+          name="recipe"
+          placeholder="Recipe"
+          onChange={handleChange}
+          rows="4"
+          cols="50"
+        />
+      </div>
+    </div>
+    <button style={{ margin: "10px" }} onClick={handleAddFood}>
+      Add Food
+    </button>
+  </div>
+);
+
 };
 
 export default AddFoodUI;
