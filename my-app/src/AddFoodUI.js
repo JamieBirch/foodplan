@@ -1,141 +1,122 @@
-import React, {
-    useState,
-    useEffect
-} from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
-import {
-    AgGridReact
-} from "ag-grid-react";
+import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import {
-    addFood
-} from "./api/FoodsAPI.js";
-import {
-    Ingredients
-} from "./api/IngredientsAPI.js";
+import { addFood } from "./api/FoodsAPI.js";
+import { Ingredients } from "./api/IngredientsAPI.js";
 
 const AddFoodUI = () => {
-    const [ingredients, setIngredients] = useState([]);
-    const [newFood, setNewFood] = useState({
-        name: "",
-        ccal: "",
-        protein: "",
-        fat: "",
-        carbs: "",
-        recipe: "",
-        ingredients: [],
+  const [ingredients, setIngredients] = useState([]);
+  const [newFood, setNewFood] = useState({
+    name: "",
+    ccal: "",
+    protein: "",
+    fat: "",
+    carbs: "",
+    recipe: "",
+    ingredients: [],
+  });
+  const [newIngredient, setNewIngredient] = useState({
+    id: null,
+    name: null,
+    howMuch: 0,
+    uom: "",
+  });
+  const uoms = [
+    { value: "GRAM", label: "g" },
+    { value: "UNIT", label: "un" },
+    { value: "TBSP", label: "tablespoon" },
+    { value: "TSP", label: "teaspoon" },
+    { value: "ML", label: "ml" },
+  ];
+
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      const ingredientsData = await Ingredients();
+      const options = ingredientsData.map((ingredient) => ({
+        value: ingredient.id,
+        label: ingredient.name,
+      }));
+      setIngredients(options);
+    };
+    fetchIngredients();
+  }, []);
+
+  const handleAddFood = async () => {
+    const updatedFoods = await addFood(newFood);
+    setNewFood({
+      name: "",
+      ccal: "",
+      protein: "",
+      fat: "",
+      carbs: "",
+      recipe: "",
+      ingredients: [],
     });
-    const [newIngredient, setNewIngredient] = useState({
-        id: null,
-        name: null,
-        howMuch: 0,
-        uom: ""
+    const event = new CustomEvent("foodAdded", {
+      value: newFood,
     });
-    const uoms = [{
-            value: 'GRAM',
-            label: 'g'
-        },
-        {
-            value: 'UNIT',
-            label: 'un'
-        },
-        {
-            value: 'TBSP',
-            label: 'tablespoon'
-        },
-        {
-            value: 'TSP',
-            label: 'teaspoon'
-        },
-        {
-            value: 'ML',
-            label: 'ml'
-        },
-        // Add more options as needed
-        //TODO duplicates public enum UnitOfMeasure
-    ];
+    window.dispatchEvent(event);
+  };
 
-    useEffect(() => {
-        const fetchIngredients = async () => {
-            const ingredientsData = await Ingredients();
-            const options = ingredientsData.map((ingredient) => ({
-                value: ingredient.id,
-                label: ingredient.name,
-            }));
-            setIngredients(options);
-        };
-        fetchIngredients();
-    }, []);
+  const handleAddIngredient = useCallback(() => {
+    if (!newIngredient.id || !newIngredient.howMuch || !newIngredient.uom) {
+      return;
+    }
 
-    const handleAddFood = async () => {
-        const updatedFoods = await addFood(newFood);
-        setNewFood({
-            name: "",
-            ccal: "",
-            protein: "",
-            fat: "",
-            carbs: "",
-            recipe: "",
-            ingredients: [],
-        });
-        const event = new CustomEvent('foodAdded', {
-            value: newFood
-        });
-        window.dispatchEvent(event);
+    const ingredient = {
+      id: newIngredient.id,
+      name: newIngredient.name,
+      howMuch: newIngredient.howMuch,
+      uom: newIngredient.uom,
     };
 
-    const handleAddIngredient = () => {
-        if (!newIngredient.id || !newIngredient.howMuch || !newIngredient.uom) {
-            return;
-        }
+    setNewFood((prevFood) => ({
+      ...prevFood,
+      ingredients: [...prevFood.ingredients, ingredient],
+    }));
+    console.log(ingredient);
 
-        const ingredient = {
-            id: newIngredient.id,
-            name: newIngredient.name,
-            howMuch: newIngredient.howMuch,
-            uom: newIngredient.uom
-        };
+    setNewIngredient({
+      id: null,
+      name: null,
+      howMuch: "",
+      uom: "",
+    });
+  }, [newIngredient]);
 
-        setNewFood(prevFood => ({
-            ...prevFood,
-            ingredients: [...prevFood.ingredients, ingredient]
-        }));
-        console.log(ingredient);
+  const handleIngredientChange = useCallback((selectedOption) => {
+    const selectedIngredient = ingredients.find(
+      (ingredient) => ingredient.id === selectedOption.value
+    );
 
-        setNewIngredient({
-            id: null,
-            name: null,
-            howMuch: "",
-            uom: ""
-        });
-    };
+    setNewIngredient((prevIngredient) => ({
+      ...prevIngredient,
+      id: selectedOption.value,
+      name: selectedOption.label,
+    }));
+  }, [ingredients]);
 
-    const handleIngredientChange = (selectedOption) => {
-        // get the selected ingredient object from the ingredients array
-        const selectedIngredient = ingredients.find((ingredient) => ingredient.id === selectedOption.value);
+  const handleHowMuchChange = useCallback(
+    (event) => {
+      setNewIngredient((prevIngredient) => ({
+        ...prevIngredient,
+        howMuch: event.target.value,
+      }));
+    },
+    []
+  );
 
-        // update the new ingredient object with the selected ingredient id
-        setNewIngredient((prevIngredient) => ({
-            ...prevIngredient,
-            id: selectedOption.value,
-            name: selectedOption.label,
-        }));
-    };
-
-    const handleHowMuchChange = (event) => {
-        setNewIngredient((prevIngredient) => ({
-            ...prevIngredient,
-            howMuch: event.target.value,
-        }));
-    };
-
-    const handleUomChange = (selectedOption) => {
-        setNewIngredient((prevIngredient) => ({
-            ...prevIngredient,
-            uom: selectedOption ? selectedOption.value : null,
-        }));
-    };
+  const handleUomChange = useCallback(
+    (selectedOption) => {
+      setNewIngredient((prevIngredient) => ({
+        ...prevIngredient,
+        uom: selectedOption ? selectedOption.value : null,
+      }));
+    },
+    []
+  );
 
     const handleChange = (event) => {
         const {
@@ -225,7 +206,7 @@ return (
           type="number"
           value={newIngredient.howMuch}
           onChange={handleHowMuchChange}
-          placeholder="HowMuch"
+          placeholder="amount"
         />
         <Select
           value={newFood.uom}
@@ -251,7 +232,7 @@ return (
           placeholder="Recipe"
           onChange={handleChange}
           rows="4"
-          cols="50"
+          cols="40"
         />
       </div>
     </div>
