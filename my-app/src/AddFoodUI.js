@@ -27,7 +27,8 @@ const AddFoodUI = () => {
         ingredients: [],
     });
     const [newIngredient, setNewIngredient] = useState({
-        ingredientId: null,
+        id: null,
+        name: null,
         howMuch: 0,
         uom: ""
     });
@@ -85,12 +86,13 @@ const AddFoodUI = () => {
     };
 
     const handleAddIngredient = () => {
-        if (!newIngredient.ingredientId || !newIngredient.howMuch || !newIngredient.uom) {
+        if (!newIngredient.id || !newIngredient.howMuch || !newIngredient.uom) {
             return;
         }
 
         const ingredient = {
-            id: newIngredient.ingredientId,
+            id: newIngredient.id,
+            name: newIngredient.name,
             howMuch: newIngredient.howMuch,
             uom: newIngredient.uom
         };
@@ -99,9 +101,11 @@ const AddFoodUI = () => {
             ...prevFood,
             ingredients: [...prevFood.ingredients, ingredient]
         }));
+        console.log(ingredient);
 
         setNewIngredient({
-            ingredientId: null,
+            id: null,
+            name: null,
             howMuch: "",
             uom: ""
         });
@@ -114,7 +118,8 @@ const AddFoodUI = () => {
         // update the new ingredient object with the selected ingredient id
         setNewIngredient((prevIngredient) => ({
             ...prevIngredient,
-            ingredientId: selectedOption.value,
+            id: selectedOption.value,
+            name: selectedOption.label,
         }));
     };
 
@@ -211,7 +216,7 @@ return (
       {/* 3rd column */}
       <div style={{ flex: 1 }}>
         <Select
-          value={ingredients.filter(option => option.value === newIngredient.ingredientId)}
+          value={ingredients.filter(option => option.value === newIngredient.id)}
           onChange={handleIngredientChange}
           options={ingredients}
           placeholder="Select an ingredient"
@@ -231,10 +236,10 @@ return (
         <button onClick={handleAddIngredient}>Add Ingredient</button>
       </div>
       {/* 4th column */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, textAlign: "left" }}>
         <ul>
                   {newFood.ingredients.map((ingredient, index) => (
-                    <li key={index}>{ingredient.id} - {ingredient.howMuch} - {ingredient.uom} </li>
+                    <li key={index}>{ingredient.name} - {ingredient.howMuch} - {ingredient.uom} </li>
                   ))}
         </ul>
       </div>
