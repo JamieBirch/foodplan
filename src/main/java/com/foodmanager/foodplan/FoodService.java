@@ -4,9 +4,6 @@ import com.foodmanager.models.Food;
 import com.foodmanager.models.FoodRequest;
 import com.foodmanager.models.Ingredient;
 import com.foodmanager.models.IngredientInfo;
-import com.foodmanager.models.IngredientRequest;
-import com.foodmanager.models.Plan;
-import com.foodmanager.models.PlanConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,17 +14,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class FoodplanService {
+public class FoodService {
 
     private FoodRepository foodRepository;
+
     private IngredientRepository ingredientRepository;
-    private MappingService mappingService;
 
     @Autowired
-    public FoodplanService(FoodRepository foodRepository, IngredientRepository ingredientRepository, MappingService mappingService) {
+    public FoodService(FoodRepository foodRepository, IngredientRepository ingredientRepository) {
         this.foodRepository = foodRepository;
         this.ingredientRepository = ingredientRepository;
-        this.mappingService = mappingService;
     }
 
     public List<Food> getFoods() {
@@ -63,38 +59,9 @@ public class FoodplanService {
         foodRepository.save(food);
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredientRepository.findAll();
-    }
-
-    @Transactional
-    public void addIngredient(IngredientRequest ingredientRequest) {
-        Ingredient ingredient = mappingService.ingredientRequestToIngredient(ingredientRequest);
-        ingredientRepository.save(ingredient);
-    }
-
-    @Transactional
-    public void addIngredients(List<IngredientRequest> ingredientsRequest) {
-        List<Ingredient> ingredients = ingredientsRequest.stream()
-                .distinct()
-                .map(i -> mappingService.ingredientRequestToIngredient(i))
-                .collect(Collectors.toList());
-        ingredientRepository.saveAll(ingredients);
-    }
-
-    public Plan createPlan(PlanConfiguration configuration) {
-        List<Food> allFoods = foodRepository.findAll();
-        return PlanBuilder.createPlan(configuration, allFoods);
-    }
-
     @Transactional
     public void deleteFood(long id) {
         foodRepository.deleteById(id);
-    }
-
-    @Transactional
-    public void deleteIngredient(long id) {
-        ingredientRepository.deleteById(id);
     }
 
     @Transactional
