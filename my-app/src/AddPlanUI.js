@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { createPlan } from "./api/PlanAPI.js";
 
 const AddPlanUI = () => {
     const [gridApi, setGridApi] = useState(null);
@@ -23,11 +24,29 @@ const AddPlanUI = () => {
             name,
             value
         } = event.target;
-        setNewPlan((prevFood) => ({
-            ...prevFood,
+        setNewPlan((prevPlan) => ({
+            ...prevPlan,
             [name]: value,
         }));
     };
+
+  const handleCreatePlan = async () => {
+    const plan = await createPlan(newPlan);
+    setNewPlan({
+      days: "",
+              requirements: {
+                  protein: "",
+                  fat: "",
+                  carbs: "",
+                  ccal: "",
+                },
+              marginOfError: "",
+    });
+/*    const event = new CustomEvent("planCreated", {
+      value: newPlan,
+    });*/
+//    window.dispatchEvent(event);
+  };
 
 return (
   <div>
@@ -92,7 +111,7 @@ return (
         />
       </div>
     </div>
-    <button style={{ margin: "10px" }} /*onClick={handleAddFood}*/>
+    <button style={{ margin: "10px" }} onClick={handleCreatePlan}>
       Add Plan
     </button>
   </div>
