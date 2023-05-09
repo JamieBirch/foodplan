@@ -31,7 +31,7 @@ public class FoodService {
     }
 
     @Transactional
-    public void addFood(FoodRequest foodRequest) {
+    public Food addFood(FoodRequest foodRequest) {
         //mappingService
         Food food = new Food();
         food.setName(foodRequest.getName());
@@ -56,7 +56,7 @@ public class FoodService {
                 .collect(Collectors.toList());
         food.setIngredients(ingredients);
 
-        foodRepository.save(food);
+        return foodRepository.save(food);
     }
 
     @Transactional

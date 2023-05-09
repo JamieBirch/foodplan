@@ -30,7 +30,8 @@ public class Ingredient {
     @OneToMany(
             mappedBy = "ingredient",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            //FIXME: temporary solution, should be true
+            orphanRemoval = false
     )
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

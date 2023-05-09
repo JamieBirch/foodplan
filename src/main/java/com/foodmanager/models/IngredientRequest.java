@@ -9,4 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class IngredientRequest {
     private String name;
+
+    //TODO introduce UOMs here?
+    //TODO introduce marcos here?
 }
