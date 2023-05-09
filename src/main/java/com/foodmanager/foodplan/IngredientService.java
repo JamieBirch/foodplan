@@ -25,18 +25,18 @@ public class IngredientService {
     }
 
     @Transactional
-    public void addIngredient(IngredientRequest ingredientRequest) {
+    public Ingredient addIngredient(IngredientRequest ingredientRequest) {
         Ingredient ingredient = mappingService.ingredientRequestToIngredient(ingredientRequest);
-        ingredientRepository.save(ingredient);
+        return ingredientRepository.save(ingredient);
     }
 
     @Transactional
-    public void addIngredients(List<IngredientRequest> ingredientsRequest) {
+    public List<Ingredient> addIngredients(List<IngredientRequest> ingredientsRequest) {
         List<Ingredient> ingredients = ingredientsRequest.stream()
                 .distinct()
                 .map(i -> mappingService.ingredientRequestToIngredient(i))
                 .collect(Collectors.toList());
-        ingredientRepository.saveAll(ingredients);
+        return ingredientRepository.saveAll(ingredients);
     }
 
     @Transactional
