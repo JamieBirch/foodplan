@@ -42,9 +42,19 @@ class FoodServiceTest {
     }
 
     public void propagateIngredientRepository() {
-        Ingredient ingredient1 = new Ingredient(1L, "Test Ingredient1", null);
-        Ingredient ingredient2 = new Ingredient(2L, "Test Ingredient2", null);
-        Ingredient ingredient3 = new Ingredient(3L, "Test Ingredient3", null);
+
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setId(1L);
+        ingredient1.setName("Test Ingredient1");
+
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setId(2L);
+        ingredient2.setName("Test Ingredient2");
+
+        Ingredient ingredient3 = new Ingredient();
+        ingredient3.setId(3L);
+        ingredient3.setName("Test Ingredient3");
+
         ingredientRepository.saveAll(List.of(
                 ingredient1,
                 ingredient2,
