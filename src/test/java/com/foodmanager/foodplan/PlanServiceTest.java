@@ -51,7 +51,10 @@ public class PlanServiceTest {
     @DirtiesContext
     void testCreatePlan() {
         int requirementCcal = 1700;
-        Macros requirementMacros = new Macros(requirementCcal, 60, 15, 70);
+        int requirementProtein = 60;
+        int requirementFat = 20;
+        int requirementCarbs = 80;
+        Macros requirementMacros = new Macros(requirementCcal, requirementProtein, requirementFat, requirementCarbs);
         int marginOfError = 20;
         PlanConfiguration configuration = new PlanConfiguration(1, requirementMacros, marginOfError);
 
@@ -59,6 +62,10 @@ public class PlanServiceTest {
 
         plan.getDayToFoods().stream().map(DayPlan::getDayStats).forEach(dayMacros -> {
             assertThat(dayMacros.getCcal()).isBetween(requirementCcal * (100-marginOfError)/100, requirementCcal * (100+marginOfError)/100);
+            //TODO uncomment when logic is implemented
+//            assertThat(dayMacros.getProtein()).isBetween(requirementProtein * (100-marginOfError)/100, requirementProtein * (100+marginOfError)/100);
+//            assertThat(dayMacros.getFat()).isBetween(requirementFat * (100-marginOfError)/100, requirementFat * (100+marginOfError)/100);
+//            assertThat(dayMacros.getCarbs()).isBetween(requirementCarbs * (100-marginOfError)/100, requirementCarbs * (100+marginOfError)/100);
         });
 
     }
