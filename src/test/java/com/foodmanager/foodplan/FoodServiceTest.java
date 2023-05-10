@@ -41,7 +41,7 @@ class FoodServiceTest {
         propagateIngredientRepository();
     }
 
-    public void propagateIngredientRepository() {
+    void propagateIngredientRepository() {
 
         Ingredient ingredient1 = new Ingredient();
         ingredient1.setId(1L);
