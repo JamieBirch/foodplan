@@ -14,7 +14,7 @@ public class PlanService {
     private FoodRepository foodRepository;
 
     @Autowired
-    public PlanService(FoodRepository foodRepository, IngredientRepository ingredientRepository, MappingService mappingService) {
+    public PlanService(FoodRepository foodRepository) {
         this.foodRepository = foodRepository;
     }
 
