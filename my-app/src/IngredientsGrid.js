@@ -1,8 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { Ingredients, deleteIngredient, addIngredient } from "./api/IngredientsAPI.js";
+import "./UI.css";
 
 const IngredientsGrid = () => {
   const [gridApi, setGridApi] = useState(null);
@@ -13,6 +15,7 @@ const IngredientsGrid = () => {
   useEffect(() => {
     const fetchIngredients = async () => {
       const ingredients = await Ingredients();
+      // console.log('Данные для rowData:', ingredients);
       setRowData(ingredients);
     };
 
@@ -27,25 +30,25 @@ const IngredientsGrid = () => {
 
   const deleteCellRenderer = (params) => {
     const onClick = async () => {
-        if (gridApi !== null) {
-            const updatedIngredients = await deleteIngredient(params.data.id);
-            setRowData(updatedIngredients);
-        }
+      if (gridApi !== null) {
+        const updatedIngredients = await deleteIngredient(params.data.id);
+        setRowData(updatedIngredients);
+      }
     };
 
     return (
-      <button onClick={onClick}>
+      <button className="ingrDeleteButton" onClick={onClick}>
         Delete
       </button>
     );
   };
 
   const handleAddIngredient = async () => {
-      if (gridApi !== null) {
-          const updatedIngredients = await addIngredient(newIngredient);
-          setRowData(updatedIngredients);
-          setNewIngredient("");
-      }
+    if (gridApi !== null) {
+      const updatedIngredients = await addIngredient(newIngredient);
+      setRowData(updatedIngredients);
+      setNewIngredient("");
+    }
   };
 
   const handleChange = (event) => {
@@ -53,28 +56,28 @@ const IngredientsGrid = () => {
   };
 
   const columnDefs = [
-    { headerName: "Id", field: "id" },
-    { headerName: "Name", field: "name" },
+    { headerName: "Id", field: "id", width: 70 },
+    { headerName: "Name", field: "name", width: 330 },
     {
-      headerName: "",
+      headerName: "Delete",
       cellRenderer: deleteCellRenderer,
       width: 100,
     },
   ];
-
   return (
     <div>
-      <div style={{ margin: "10px" }}>
+      <div className="ingredientControls">
         <input type="text" value={newIngredient} onChange={handleChange} />
-        <button onClick={handleAddIngredient}>
+        <button className="ingrButton" onClick={handleAddIngredient}>
           Add
         </button>
       </div>
-      <div className="ag-theme-alpine" style={{ height: "80vh", width: "100%", textAlign: "left", overflow: "hidden" }}>
+      <div className="ag-theme-alpine gridContainer" style={{ width: 500 }}>
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}
           rowData={rowData}
+          className="ag-grid-custom-class"
         />
       </div>
     </div>
@@ -82,3 +85,5 @@ const IngredientsGrid = () => {
 };
 
 export default IngredientsGrid;
+
+

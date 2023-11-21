@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
 import { AgGridReact } from "ag-grid-react";
@@ -5,6 +6,10 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { addFood } from "./api/FoodsAPI.js";
 import { Ingredients } from "./api/IngredientsAPI.js";
+import "./UI.css";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import CcalCalc from './CcalCalc';
+
 
 const AddFoodUI = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -43,8 +48,8 @@ const AddFoodUI = () => {
     fetchIngredients();
   }, []);
 
-  const handleAddFood = async () => {
-    const updatedFoods = await addFood(newFood);
+  const handleAddFood = async (values) => {
+    const updatedFoods = await addFood(values);
     setNewFood({
       name: "",
       ccal: "",
@@ -55,7 +60,7 @@ const AddFoodUI = () => {
       ingredients: [],
     });
     const event = new CustomEvent("foodAdded", {
-      value: newFood,
+      value: values,
     });
     window.dispatchEvent(event);
   };
@@ -118,130 +123,147 @@ const AddFoodUI = () => {
     []
   );
 
-    const handleChange = (event) => {
-        const {
-            name,
-            value
-        } = event.target;
-        setNewFood((prevFood) => ({
-            ...prevFood,
-            [name]: value,
-        }));
-    };
+  const handleChange = (event) => {
+    const {
+      name,
+      value
+    } = event.target;
+    setNewFood((prevFood) => ({
+      ...prevFood,
+      [name]: value,
+    }));
+  };
 
-    const recipeCellRenderer = (params) => {
-        return ( <
-            div style = {
-                {
-                    whiteSpace: "normal"
-                }
-            } > {
-                params.value
-            } <
-            /div>
-        );
-    };
+  const recipeCellRenderer = (params) => {
+    return (
+      <div style={{ whiteSpace: "normal" }} > {params.value} </div>
+    )
+  }
+  const calculateCcal = (protein, fat, carbs) => {
+    return protein * 4 + fat * 9 + carbs * 4;
+  };
 
-return (
-  <div>
-    <div style={{ margin: "10px", display: "flex" }}>
-      {/* 1st column */}
-      <div style={{ flex: 1 }}>
-        <input
-          type="text"
-          value={newFood.name}
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
-        />
-      </div>
-      {/* 2nd column */}
-      <div style={{ flex: 1 }}>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.protein}
-            name="protein"
-            placeholder="Protein"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.fat}
-            name="fat"
-            placeholder="Fats"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.carbs}
-            name="carbs"
-            placeholder="Carbs"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.ccal}
-            name="ccal"
-            placeholder="Calories"
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      {/* 3rd column */}
-      <div style={{ flex: 1 }}>
-        <Select
-          value={ingredients.filter(option => option.value === newIngredient.id)}
-          onChange={handleIngredientChange}
-          options={ingredients}
-          placeholder="Select an ingredient"
-        />
-        <input
-          type="number"
-          value={newIngredient.howMuch}
-          onChange={handleHowMuchChange}
-          placeholder="amount"
-        />
-        <Select
-          value={newFood.uom}
-          onChange={handleUomChange}
-          options={uoms}
-          placeholder="Select a unit of measurement"
-        />
-        <button onClick={handleAddIngredient}>Add Ingredient</button>
-      </div>
-      {/* 4th column */}
-      <div style={{ flex: 1, textAlign: "left" }}>
-        <ul>
-                  {newFood.ingredients.map((ingredient, index) => (
-                    <li key={index}>{ingredient.name} - {ingredient.howMuch} - {ingredient.uom} </li>
-                  ))}
-        </ul>
-      </div>
-      {/* 5th column */}
-      <div style={{ flex: 1 }}>
-        <textarea
-          value={newFood.recipe}
-          name="recipe"
-          placeholder="Recipe"
-          onChange={handleChange}
-          rows="4"
-          cols="40"
-        />
-      </div>
-    </div>
-    <button style={{ margin: "10px" }} onClick={handleAddFood}>
-      Add Food
-    </button>
-  </div>
-);
+  return (
+    <Formik
+      initialValues={newFood}
+      onSubmit={(values, actions) => {
+        handleAddFood(values);
+        actions.resetForm();
+      }}
+      validate={(values) => {
+        const errors = {};
+        if (!values.name) {
+          errors.name = "Required";
+        }
+        return errors;
+      }}
+    >
+      {({ values, handleChange, handleSubmit }) => (
+        <Form className="formAddFood">
+          <div className="form-containerAddFood">
+            <div className="form-group">
+              <input
+                type="text"
+                value={values.name}
+                name="name"
+                placeholder="Name"
+                onChange={handleChange}
+              />
+              <ErrorMessage name="name" component="div" />
+            </div>
+            <div className="form-group">
+              <input
+                type="number"
+                value={values.protein}
+                name="protein"
+                placeholder="Protein"
+                onChange={handleChange}
+              />
+              <ErrorMessage name="protein" component="div" />
+              <input
+                type="number"
+                value={values.fat}
+                name="fat"
+                placeholder="Fats"
+                onChange={handleChange}
+              />
+              <ErrorMessage name="fat" component="div" />
+              <input
+                type="number"
+                value={values.carbs}
+                name="carbs"
+                placeholder="Carbs"
+                onChange={handleChange}
+              />
+              <ErrorMessage name="carbs" component="div" />
+              <CcalCalc
+                protein={values.protein}
+                fat={values.fat}
+                carbs={values.carbs}
+                onChange={handleChange}
+              />
+              <ErrorMessage name="ccal" component="div" />
+            </div>
+            <div className="form-group">
+              <Select
+                value={ingredients.filter((option) => option.value === newIngredient.id)}
+                onChange={handleIngredientChange}
+                options={ingredients}
+                placeholder="Select an ingredient"
+              />
+              <input
+                type="number"
+                value={newIngredient.howMuch}
+                onChange={handleHowMuchChange}
+                placeholder="amount"
+              />
+              <Select
+                value={newFood.uom}
+                onChange={handleUomChange}
+                options={uoms}
+                placeholder="Select a unit of measurement"
+              />
+            </div>
+            <div>
+              <ul>
+                {newFood.ingredients.map((ingredient, index) => (
+                  <li key={index}>
+                    {ingredient.name} - {ingredient.howMuch} - {ingredient.uom}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <div className="button-container">
+            <button className="ingrFoodButton" onClick={handleAddIngredient}>
+              Add Ingredient
+            </button>
+          </div>
+          <div className="recipe-group">
+            <textarea
+              value={values.recipe}
+              name="recipe"
+              placeholder="Recipe"
+              onChange={handleChange}
+              rows="4"
+              cols="40"
+              className="full-width"
+            />
+            <ErrorMessage name="recipe" component="div" />
+            <div className="button-container">
+              <button type="submit" className="foodButton">
+                Add Food
+              </button>
+            </div>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
+
 
 };
 
 export default AddFoodUI;
+
+

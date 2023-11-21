@@ -1,121 +1,98 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { createPlan } from "./api/PlanAPI.js";
+import "./UI.css";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import CcalCalc from './CcalCalc';
+
 
 const AddPlanUI = () => {
-    const [gridApi, setGridApi] = useState(null);
-    const [gridColumnApi, setGridColumnApi] = useState(null);
-    const [rowData, setRowData] = useState([]);
-    const [newPlan, setNewPlan] = useState({
-        days: "",
-        requirements: {
-            protein: "",
-            fat: "",
-            carbs: "",
-            ccal: "",
-          },
-        marginOfError: "",
-     });
-
-    const handleChange = (event) => {
-        const {
-            name,
-            value
-        } = event.target;
-        setNewPlan((prevPlan) => ({
-            ...prevPlan,
-            [name]: value,
-        }));
-    };
-
-  const handleCreatePlan = async () => {
-    const plan = await createPlan(newPlan);
-    setNewPlan({
-      days: "",
-              requirements: {
-                  protein: "",
-                  fat: "",
-                  carbs: "",
-                  ccal: "",
-                },
-              marginOfError: "",
-    });
-/*    const event = new CustomEvent("planCreated", {
-      value: newPlan,
-    });*/
-//    window.dispatchEvent(event);
+  const initialValues = {
+    days: '',
+    marginOfError: '',
+    requirements: {
+      protein: '',
+      fat: '',
+      carbs: '',
+      ccal: ''
+    }
   };
 
-return (
-  <div>
-    <div style={{ margin: "10px", display: "flex" }}>
-      {/* 1st column */}
-      <div style={{ flex: 1 }}>
-        <input
-          type="number"
-          value={newPlan.days}
-          name="days"
-          placeholder="Days"
-          onChange={handleChange}
-        />
-      </div>
-      {/* 2nd column */}
-      <div style={{ flex: 1 }}>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newPlan.requirements.protein}
-            name="protein"
-            placeholder="Protein"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newPlan.requirements.fat}
-            name="fat"
-            placeholder="Fats"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newPlan.requirements.carbs}
-            name="carbs"
-            placeholder="Carbs"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newPlan.requirements.ccal}
-            name="ccal"
-            placeholder="Calories"
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      {/* 3rd column */}
-      <div style={{ flex: 1 }}>
-        <input
-          type="number"
-          value={newPlan.marginOfError}
-          name="marginOfError"
-          placeholder="Margin of Error"
-          onChange={handleChange}
-        />
-      </div>
-    </div>
-    <button style={{ margin: "10px" }} onClick={handleCreatePlan}>
-      Add Plan
-    </button>
-  </div>
-);
+  const handleSubmit = async (values, { resetForm }) => {
+    values.requirements.ccal = parseFloat(values.requirements.ccal);
+    try {
+      console.log('Отправка данных на сервер:', values);
+      const response = await createPlan(values);
+      console.log('Ответ от сервера:', response);
+      resetForm();
+    } catch (error) {
+      console.error('Ошибка при отправке данных:', error);
+    }
+  };
+
+  const calculateCcal = (protein, fat, carbs) => {
+    return protein * 4 + fat * 9 + carbs * 4;
+  };
+
+
+
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={handleSubmit}
+    >
+      {({ values, setFieldValue }) => (
+        <Form>
+          <div className="form-containerAddPlan">
+            <div className="days">
+              <Field type="number" name="days" placeholder="Days" />
+            </div>
+            <div className="prot">
+              <Field type="number" name="requirements.protein" placeholder="Protein" required
+                onChange={(e) => {
+                  setFieldValue("requirements.protein", e.target.value);
+                  setFieldValue("requirements.ccal", calculateCcal(parseFloat(e.target.value), values.requirements.fat, values.requirements.carbs));
+                }} />
+            </div>
+            <div className="marg">
+              <Field
+                type="number"
+                name="marginOfError"
+                placeholder="Margin of Error"
+              />
+            </div>
+            <div className="fat">
+              <Field type="number" name="requirements.fat" placeholder="Fats" required
+                onChange={(e) => {
+                  setFieldValue("requirements.fat", e.target.value);
+                  setFieldValue("requirements.ccal", calculateCcal(values.requirements.protein, parseFloat(e.target.value), values.requirements.carbs));
+                }} />
+            </div>
+            <div className="carb">
+              <Field type="number" name="requirements.carbs" placeholder="Carbs" required onChange={(e) => {
+                setFieldValue("requirements.carbs", e.target.value);
+                setFieldValue("requirements.ccal", calculateCcal(values.requirements.protein, values.requirements.fat, parseFloat(e.target.value)));
+              }} />
+            </div>
+            <div className="ccal">
+              <CcalCalc
+                protein={values.requirements.protein}
+                fat={values.requirements.fat}
+                carbs={values.requirements.carbs}
+              />
+              <ErrorMessage name="requirements.ccal" />
+            </div>
+          </div>
+          <button className="planButton" type="submit">
+            Add Plan
+          </button>
+        </Form>
+      )}
+    </Formik>
+  );
 };
 
 export default AddPlanUI;

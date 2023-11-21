@@ -1,6 +1,5 @@
 .App {
   text-align: center;
-  width: auto;
 }
 
 :root {
@@ -60,12 +59,6 @@
   }
 }
 
-nav {
-  display: flex;
-  width: fit-content;
-
-}
-
 ul {
   display: flex;
   justify-content: space-evenly;
@@ -74,7 +67,7 @@ ul {
   margin-block-end: 1em;
   margin-inline-start: 0px;
   margin-inline-end: 0px;
-  padding-inline-start: 30px;
+  padding-inline-start: 40px;
 }
 
 .footer {
