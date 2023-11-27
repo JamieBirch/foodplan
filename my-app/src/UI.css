@@ -184,7 +184,7 @@ form {}
 
 .form-containerAddFood {
   display: grid;
-  grid-template-columns: 1fr 1fr 2fr;
+  grid-template-columns: 3fr 2fr 4fr;
   grid-template-rows: 90px;
   justify-items: flex-start;
   gap: 20px;
@@ -195,14 +195,10 @@ form {}
 .form-group {
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 10px;
-
 }
 
-.form-column {
-  display: flex;
-  columns: 3;
-}
 
 .recipe-group {}
 
@@ -216,4 +212,40 @@ form {}
   width: 100%;
   box-sizing: border-box;
   margin-top: 30px;
+}
+
+.plan {
+  margin-left: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+table th,
+table td {
+  padding: 8px;
+  border: 1px solid #ccc;
+  text-align: left;
+}
+
+table td.day {
+  font-weight: bold;
+}
+
+table td.name {
+  font-size: 22px;
+}
+
+.slide-in-fwd-center-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-in-fwd-center-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }

@@ -8,7 +8,7 @@ import { addFood } from "./api/FoodsAPI.js";
 import { Ingredients } from "./api/IngredientsAPI.js";
 import "./UI.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import CcalCalc from './CcalCalc';
+import CcalCalc, { calculateCcal } from "./CcalCalc";
 
 
 const AddFoodUI = () => {
@@ -49,6 +49,10 @@ const AddFoodUI = () => {
   }, []);
 
   const handleAddFood = async (values) => {
+    const ccalValue = calculateCcal(values.protein, values.fat, values.carbs);
+
+    values.ccal = ccalValue;
+
     const updatedFoods = await addFood(values);
     setNewFood({
       name: "",
@@ -64,6 +68,8 @@ const AddFoodUI = () => {
     });
     window.dispatchEvent(event);
   };
+
+
 
   const handleAddIngredient = useCallback(() => {
     if (!newIngredient.id || !newIngredient.howMuch || !newIngredient.uom) {
@@ -124,10 +130,8 @@ const AddFoodUI = () => {
   );
 
   const handleChange = (event) => {
-    const {
-      name,
-      value
-    } = event.target;
+    const { name, value } = event.target;
+
     setNewFood((prevFood) => ({
       ...prevFood,
       [name]: value,
@@ -139,9 +143,58 @@ const AddFoodUI = () => {
       <div style={{ whiteSpace: "normal" }} > {params.value} </div>
     )
   }
-  const calculateCcal = (protein, fat, carbs) => {
-    return protein * 4 + fat * 9 + carbs * 4;
-  };
+
+
+  const handleProteinChange = useCallback(
+    (event) => {
+      const proteinValue = parseFloat(event.target.value);
+      const ccalValue = calculateCcal(proteinValue, newFood.fat, newFood.carbs);
+
+      setNewFood((prevFood) => ({
+        ...prevFood,
+        protein: proteinValue,
+        ccal: isNaN(ccalValue) ? null : ccalValue,
+      }));
+      console.log('New food:', newFood);
+
+    },
+    [newFood.fat, newFood.carbs]
+  );
+
+  const handleFatChange = useCallback(
+    (event) => {
+      const fatValue = parseFloat(event.target.value);
+      const ccalValue = calculateCcal(newFood.protein, fatValue, newFood.carbs);
+
+      setNewFood((prevFood) => ({
+        ...prevFood,
+        fat: fatValue,
+        ccal: isNaN(ccalValue) ? null : ccalValue,
+      }));
+      console.log('New food:', newFood);
+
+    },
+    [newFood.protein, newFood.carbs]
+  );
+
+  const handleCarbsChange = useCallback((event) => {
+    const carbsValue = parseFloat(event.target.value);
+    console.log('Carbs value:', carbsValue);
+
+    const protein = newFood.protein;
+    const fat = newFood.fat;
+    const ccalValue = calculateCcal(protein, fat, carbsValue);
+
+    setNewFood((prevFood) => ({
+      ...prevFood,
+      carbs: isNaN(carbsValue) ? '' : carbsValue,
+      ccal: isNaN(carbsValue) ? null : ccalValue,
+    }));
+
+    console.log('New food:', newFood);
+  }, [newFood.fat, newFood.protein]);
+
+
 
   return (
     <Formik
@@ -162,7 +215,7 @@ const AddFoodUI = () => {
         <Form className="formAddFood">
           <div className="form-containerAddFood">
             <div className="form-group">
-              <input
+              <input className="foodName"
                 type="text"
                 value={values.name}
                 name="name"
@@ -177,29 +230,35 @@ const AddFoodUI = () => {
                 value={values.protein}
                 name="protein"
                 placeholder="Protein"
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  handleProteinChange(e);
+                }}
               />
-              <ErrorMessage name="protein" component="div" />
               <input
                 type="number"
                 value={values.fat}
                 name="fat"
                 placeholder="Fats"
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  handleFatChange(e);
+                }}
               />
-              <ErrorMessage name="fat" component="div" />
               <input
                 type="number"
                 value={values.carbs}
                 name="carbs"
                 placeholder="Carbs"
-                onChange={handleChange}
+                onChange={(e) => {
+                  handleChange(e);
+                  handleCarbsChange(e);
+                }}
               />
-              <ErrorMessage name="carbs" component="div" />
               <CcalCalc
-                protein={values.protein}
-                fat={values.fat}
-                carbs={values.carbs}
+                protein={Number(values.protein)}
+                fat={Number(values.fat)}
+                carbs={Number(values.carbs)}
                 onChange={handleChange}
               />
               <ErrorMessage name="ccal" component="div" />
@@ -235,7 +294,7 @@ const AddFoodUI = () => {
             </div>
           </div>
           <div className="button-container">
-            <button className="ingrFoodButton" onClick={handleAddIngredient}>
+            <button className="ingrFoodButton" onClick={handleAddIngredient} type="button">
               Add Ingredient
             </button>
           </div>

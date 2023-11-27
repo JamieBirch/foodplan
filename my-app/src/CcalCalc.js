@@ -1,20 +1,27 @@
+
+
+
 import React from "react";
 
+export const calculateCcal = (protein, fat, carbs) => {
+  const proteinValue = parseFloat(protein);
+  const fatValue = parseFloat(fat);
+  const carbsValue = parseFloat(carbs);
+
+  if (isNaN(proteinValue) || isNaN(fatValue) || isNaN(carbsValue)) {
+    return 'Calories';
+  }
+
+  return proteinValue * 4 + fatValue * 9 + carbsValue * 4;
+};
 
 const CcalCalc = ({ protein, fat, carbs }) => {
-  const calculateCcal = (protein, fat, carbs) => {
-    if (protein === '' || fat === '' || carbs === '') {
-      return 'Calories';
-    }
-    return protein * 4 + fat * 9 + carbs * 4;
-  };
-
   const ccal = calculateCcal(protein, fat, carbs);
 
   return (
     <input
       type="text"
-      value={ccal}
+      value={isNaN(ccal) ? 'Calories' : ccal}
       placeholder="Calories"
       readOnly
     />
@@ -22,3 +29,4 @@ const CcalCalc = ({ protein, fat, carbs }) => {
 };
 
 export default CcalCalc;
+
