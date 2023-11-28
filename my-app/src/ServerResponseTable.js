@@ -21,23 +21,23 @@ const ServerResponseTable = ({ responseData }) => {
               <td colSpan="4">
                 <table>
                   <tbody className="tableBody">
-                    <tr>
-                      <td className="name">{dayFood.foods[0].name}</td>
+                    <tr className="tdName">
+                      <td>{dayFood.foods[0].name}</td>
                       <td></td>
                     </tr>
-                    <tr>
+                    <tr className='tdProtein'>
                       <td>Protein:</td>
                       <td>{dayFood.dayStats.protein}</td>
                     </tr>
-                    <tr>
+                    <tr className='tdFat'>
                       <td>Fat:</td>
                       <td>{dayFood.dayStats.fat}</td>
                     </tr>
-                    <tr>
+                    <tr className='tdCarbs'>
                       <td>Carbs:</td>
                       <td>{dayFood.dayStats.carbs}</td>
                     </tr>
-                    <tr>
+                    <tr className='tdCcal'>
                       <td>Calories:</td>
                       <td>{dayFood.dayStats.ccal}</td>
                     </tr>

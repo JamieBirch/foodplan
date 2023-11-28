@@ -26,7 +26,6 @@
   border: none;
   font-size: medium;
   color: white;
-  /* box-shadow: 2px 2px 0px 0px var(--ninth); */
   transition: 0.3s;
 }
 
@@ -38,7 +37,6 @@
   border: none;
   font-size: medium;
   color: white;
-  /* box-shadow: 2px 2px 0px 0px var(--ninth); */
   transition: 0.3s;
 }
 
@@ -50,7 +48,6 @@
   border: none;
   font-size: medium;
   color: white;
-  /* box-shadow: 2px 2px 0px 0px var(--ninth); */
   transition: 0.3s;
 }
 
@@ -66,7 +63,8 @@
 
 .ingrDeleteButton {
   width: 60px;
-  height: auto;
+  height: 30px;
+  line-height: normal;
   border-radius: 20px;
   background-color: var(--third);
   border: none;
@@ -80,7 +78,7 @@
 .button-container {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .foodButton {
@@ -104,11 +102,9 @@
   box-shadow: none;
 }
 
-.ag-header-row-column {
-  /* background-color: var(--base); */
-}
+.ag-header-row-column {}
 
-/*  button animation */
+
 @keyframes shadow-drop-center {
   0% {
     -webkit-box-shadow: 0 0 0 0 transparent;
@@ -123,6 +119,23 @@
 
 button:active {
   animation: shadow-drop-center 1ms ease forwards;
+}
+
+/* Добавление анимации для закрытия модального окна */
+@keyframes scale-out-center {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+}
+
+.scale-out-center {
+  animation: scale-out-center 0.3s ease-in-out;
 }
 
 form {}
@@ -178,9 +191,21 @@ form {}
   margin-top: 10px;
 }
 
+
+
 .formAddFood {
   display: grid;
+  line-height: normal;
 }
+
+.day {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-right: 1px solid white;
+  ;
+  text-align: center;
+}
+
 
 .form-containerAddFood {
   display: grid;
@@ -221,23 +246,44 @@ form {}
 table {
   width: 100%;
   border-collapse: collapse;
+  border: 1px solid #ddd;
   margin-top: 20px;
+  /* border-radius: 20px; */
+
 }
 
 table th,
 table td {
   padding: 8px;
-  border: 1px solid #ccc;
+  /* border: 1px solid #ccc; */
   text-align: left;
+}
+
+.day {
+  padding: 8px;
+  text-align: center;
 }
 
 table td.day {
   font-weight: bold;
+
 }
 
-table td.name {
+.tdName {
   font-size: 22px;
+  background-color: var(--third);
+  border: none;
+  border-radius: 20px;
 }
+
+
+tr.tdProtein {}
+
+tr.tdFat {}
+
+tr.tdCarbs {}
+
+tr.tdCcal {}
 
 .slide-in-fwd-center-enter {
   opacity: 0;
@@ -248,4 +294,15 @@ table td.name {
   opacity: 1;
   transform: translateX(0%);
   transition: all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tableBody {}
+
+.tableBody td:first-child {
+  width: 70%;
+  text-align: left;
+}
+
+.tableBody td:last-child {
+  width: 30%;
 }

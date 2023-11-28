@@ -26,9 +26,7 @@ const AddPlanUI = () => {
   const handleSubmit = async (values, { resetForm }) => {
     values.requirements.ccal = parseFloat(values.requirements.ccal);
     try {
-      console.log('Отправка данных на сервер:', values);
       const response = await createPlan(values);
-      console.log('Ответ от сервера:', response);
       setServerResponse(response);
       resetForm();
     } catch (error) {

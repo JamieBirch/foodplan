@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect, useCallback } from "react";
+import { Modal, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Select from "react-select";
-import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { addFood } from "./api/FoodsAPI.js";
@@ -35,6 +36,11 @@ const AddFoodUI = () => {
     { value: "TSP", label: "teaspoon" },
     { value: "ML", label: "ml" },
   ];
+  const [showModal, setShowModal] = useState(false);
+  const [modalValues, setModalValues] = useState({});
+  const [animationOut, setAnimationOut] = useState(false);
+
+
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -48,12 +54,26 @@ const AddFoodUI = () => {
     fetchIngredients();
   }, []);
 
+  useEffect(() => {
+    if (showModal) {
+      const timeout = setTimeout(() => {
+        handleCloseModal();
+      }, 3000); // 3 секунды
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showModal]);
+
   const handleAddFood = async (values) => {
     const ccalValue = calculateCcal(values.protein, values.fat, values.carbs);
-
     values.ccal = ccalValue;
-
-    const updatedFoods = await addFood(values);
+    const updatedFood = {
+      ...newFood,
+      ccal: ccalValue,
+      name: values.name,
+      recipe: values.recipe
+    };
+    await addFood(updatedFood);
     setNewFood({
       name: "",
       ccal: "",
@@ -67,6 +87,17 @@ const AddFoodUI = () => {
       value: values,
     });
     window.dispatchEvent(event);
+    setShowModal(true);
+    setModalValues(values);
+  };
+  const handleCloseModal = () => {
+    setAnimationOut(true);
+
+    setTimeout(() => {
+      setShowModal(false);
+      setModalValues({});
+      setAnimationOut(false);
+    }, 300);
   };
 
 
@@ -96,6 +127,7 @@ const AddFoodUI = () => {
       uom: "",
     });
   }, [newIngredient]);
+
 
   const handleIngredientChange = useCallback((selectedOption) => {
     const selectedIngredient = ingredients.find(
@@ -155,8 +187,6 @@ const AddFoodUI = () => {
         protein: proteinValue,
         ccal: isNaN(ccalValue) ? null : ccalValue,
       }));
-      console.log('New food:', newFood);
-
     },
     [newFood.fat, newFood.carbs]
   );
@@ -171,15 +201,12 @@ const AddFoodUI = () => {
         fat: fatValue,
         ccal: isNaN(ccalValue) ? null : ccalValue,
       }));
-      console.log('New food:', newFood);
-
     },
     [newFood.protein, newFood.carbs]
   );
 
   const handleCarbsChange = useCallback((event) => {
     const carbsValue = parseFloat(event.target.value);
-    console.log('Carbs value:', carbsValue);
 
     const protein = newFood.protein;
     const fat = newFood.fat;
@@ -191,133 +218,156 @@ const AddFoodUI = () => {
       ccal: isNaN(carbsValue) ? null : ccalValue,
     }));
 
-    console.log('New food:', newFood);
   }, [newFood.fat, newFood.protein]);
 
 
 
   return (
-    <Formik
-      initialValues={newFood}
-      onSubmit={(values, actions) => {
-        handleAddFood(values);
-        actions.resetForm();
-      }}
-      validate={(values) => {
-        const errors = {};
-        if (!values.name) {
-          errors.name = "Required";
-        }
-        return errors;
-      }}
-    >
-      {({ values, handleChange, handleSubmit }) => (
-        <Form className="formAddFood">
-          <div className="form-containerAddFood">
-            <div className="form-group">
-              <input className="foodName"
-                type="text"
-                value={values.name}
-                name="name"
-                placeholder="Name"
-                onChange={handleChange}
-              />
-              <ErrorMessage name="name" component="div" />
+    <>
+      <Formik
+        initialValues={newFood}
+        onSubmit={(values, actions) => {
+          handleAddFood(values);
+          actions.resetForm();
+          console.log("New Food is added", values)
+        }}
+        validate={(values) => {
+          const errors = {};
+          if (!values.name) {
+            errors.name = "Required";
+          }
+          return errors;
+        }}
+      >
+        {({ values, handleChange, handleSubmit }) => (
+          <Form className="formAddFood">
+            <div className="form-containerAddFood">
+              <div className="form-group">
+                <input className="foodName"
+                  type="text"
+                  value={values.name}
+                  name="name"
+                  placeholder="Name"
+                  onChange={handleChange}
+                />
+                <ErrorMessage name="name" component="div" />
+              </div>
+              <div className="form-group">
+                <input
+                  type="number"
+                  value={values.protein}
+                  name="protein"
+                  placeholder="Protein"
+                  onChange={(e) => {
+                    handleChange(e);
+                    handleProteinChange(e);
+                  }}
+                />
+                <input
+                  type="number"
+                  value={values.fat}
+                  name="fat"
+                  placeholder="Fats"
+                  onChange={(e) => {
+                    handleChange(e);
+                    handleFatChange(e);
+                  }}
+                />
+                <input
+                  type="number"
+                  value={values.carbs}
+                  name="carbs"
+                  placeholder="Carbs"
+                  onChange={(e) => {
+                    handleChange(e);
+                    handleCarbsChange(e);
+                  }}
+                />
+                <CcalCalc
+                  protein={Number(values.protein)}
+                  fat={Number(values.fat)}
+                  carbs={Number(values.carbs)}
+                  onChange={handleChange}
+                />
+                <ErrorMessage name="ccal" component="div" />
+              </div>
+              <div className="form-group">
+                <Select
+                  value={ingredients.filter((option) => option.value === newIngredient.id)}
+                  onChange={handleIngredientChange}
+                  options={ingredients}
+                  placeholder="Select an ingredient"
+                />
+                <input
+                  type="number"
+                  value={newIngredient.howMuch}
+                  onChange={handleHowMuchChange}
+                  placeholder="amount"
+                />
+                <Select
+                  value={newFood.uom}
+                  onChange={handleUomChange}
+                  options={uoms}
+                  placeholder="Select a unit of measurement"
+                />
+              </div>
+              <div>
+                <ul>
+                  {newFood.ingredients.map((ingredient, index) => (
+                    <li key={index}>
+                      {ingredient.name} - {ingredient.howMuch} - {ingredient.uom}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <div className="form-group">
-              <input
-                type="number"
-                value={values.protein}
-                name="protein"
-                placeholder="Protein"
-                onChange={(e) => {
-                  handleChange(e);
-                  handleProteinChange(e);
-                }}
-              />
-              <input
-                type="number"
-                value={values.fat}
-                name="fat"
-                placeholder="Fats"
-                onChange={(e) => {
-                  handleChange(e);
-                  handleFatChange(e);
-                }}
-              />
-              <input
-                type="number"
-                value={values.carbs}
-                name="carbs"
-                placeholder="Carbs"
-                onChange={(e) => {
-                  handleChange(e);
-                  handleCarbsChange(e);
-                }}
-              />
-              <CcalCalc
-                protein={Number(values.protein)}
-                fat={Number(values.fat)}
-                carbs={Number(values.carbs)}
-                onChange={handleChange}
-              />
-              <ErrorMessage name="ccal" component="div" />
-            </div>
-            <div className="form-group">
-              <Select
-                value={ingredients.filter((option) => option.value === newIngredient.id)}
-                onChange={handleIngredientChange}
-                options={ingredients}
-                placeholder="Select an ingredient"
-              />
-              <input
-                type="number"
-                value={newIngredient.howMuch}
-                onChange={handleHowMuchChange}
-                placeholder="amount"
-              />
-              <Select
-                value={newFood.uom}
-                onChange={handleUomChange}
-                options={uoms}
-                placeholder="Select a unit of measurement"
-              />
-            </div>
-            <div>
-              <ul>
-                {newFood.ingredients.map((ingredient, index) => (
-                  <li key={index}>
-                    {ingredient.name} - {ingredient.howMuch} - {ingredient.uom}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-          <div className="button-container">
-            <button className="ingrFoodButton" onClick={handleAddIngredient} type="button">
-              Add Ingredient
-            </button>
-          </div>
-          <div className="recipe-group">
-            <textarea
-              value={values.recipe}
-              name="recipe"
-              placeholder="Recipe"
-              onChange={handleChange}
-              rows="4"
-              cols="40"
-              className="full-width"
-            />
-            <ErrorMessage name="recipe" component="div" />
             <div className="button-container">
-              <button type="submit" className="foodButton">
-                Add Food
+              <button className="ingrFoodButton" onClick={handleAddIngredient} type="button">
+                Add Ingredient
               </button>
             </div>
-          </div>
-        </Form>
-      )}
-    </Formik>
+            <div className="recipe-group">
+              <textarea
+                value={values.recipe}
+                name="recipe"
+                placeholder="Recipe"
+                onChange={handleChange}
+                rows="4"
+                cols="40"
+                className="full-width"
+              />
+              <ErrorMessage name="recipe" component="div" />
+              <div className="button-container">
+                <button type="submit" className="foodButton">
+                  Add Food
+                </button>
+              </div>
+            </div>
+          </Form>
+        )}
+      </Formik>
+      <Modal show={showModal} onHide={handleCloseModal} className={animationOut ? 'scale-out-center' : ''}>
+        <Modal.Header closeButton>
+          <Modal.Title>The food was added successfully</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {Object.keys(modalValues).length !== 0 && (
+            <>
+              <h3>{modalValues.name}</h3>
+              <p>Protein: {modalValues.protein}</p>
+              <p>Fats: {modalValues.fat}</p>
+              <p>Carbs: {modalValues.carbs}</p>
+              <p>Ccal: {modalValues.ccal}</p>
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Закрыть
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 
 
