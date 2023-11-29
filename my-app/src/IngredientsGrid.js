@@ -15,8 +15,8 @@ const IngredientsGrid = () => {
   useEffect(() => {
     const fetchIngredients = async () => {
       const ingredients = await Ingredients();
-      // console.log('Данные для rowData:', ingredients);
-      setRowData(ingredients);
+      setRowData([...ingredients].reverse());
+
     };
 
     fetchIngredients();

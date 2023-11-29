@@ -1,14 +1,17 @@
 
 import React, { useState, useEffect, useCallback } from "react";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Select from "react-select";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { addFood } from "./api/FoodsAPI.js";
-import { Ingredients } from "./api/IngredientsAPI.js";
+import { getFoods, deleteFood, addFood } from "./api/FoodsAPI.js";
+import { Ingredients, deleteIngredient } from "./api/IngredientsAPI.js";
 import "./UI.css";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, ErrorMessage } from "formik";
 import CcalCalc, { calculateCcal } from "./CcalCalc";
 
 
@@ -23,6 +26,7 @@ const AddFoodUI = () => {
     recipe: "",
     ingredients: [],
   });
+  const [foodsData, setFoodsData] = useState([]);
   const [newIngredient, setNewIngredient] = useState({
     id: null,
     name: null,
@@ -40,6 +44,9 @@ const AddFoodUI = () => {
   const [modalValues, setModalValues] = useState({});
   const [animationOut, setAnimationOut] = useState(false);
 
+  const [gridApi, setGridApi] = useState(null);
+  const [gridColumnApi, setGridColumnApi] = useState(null);
+  const [rowData, setRowData] = useState([]);
 
 
   useEffect(() => {
@@ -58,37 +65,70 @@ const AddFoodUI = () => {
     if (showModal) {
       const timeout = setTimeout(() => {
         handleCloseModal();
-      }, 3000); // 3 секунды
+      }, 3000);
 
       return () => clearTimeout(timeout);
     }
   }, [showModal]);
 
-  const handleAddFood = async (values) => {
-    const ccalValue = calculateCcal(values.protein, values.fat, values.carbs);
-    values.ccal = ccalValue;
-    const updatedFood = {
-      ...newFood,
-      ccal: ccalValue,
-      name: values.name,
-      recipe: values.recipe
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const foods = await getFoods();
+        setFoodsData(foods);
+        setRowData([...foods].reverse());
+      } catch (error) {
+        console.error("Error fetching foods:", error);
+      }
     };
-    await addFood(updatedFood);
-    setNewFood({
-      name: "",
-      ccal: "",
-      protein: "",
-      fat: "",
-      carbs: "",
-      recipe: "",
-      ingredients: [],
-    });
-    const event = new CustomEvent("foodAdded", {
-      value: values,
-    });
-    window.dispatchEvent(event);
-    setShowModal(true);
-    setModalValues(values);
+
+    fetchFoods();
+  }, []);
+
+
+  const deleteCellRenderer = (params) => {
+    const onClick = async () => {
+      try {
+        await deleteFood(params.data.id);
+        const updatedFoods = foodsData.filter(food => food.id !== params.data.id);
+        setFoodsData(updatedFoods);
+      } catch (error) {
+        console.error("Error deleting food:", error);
+      }
+    };
+
+
+    return (
+      <button className="ingrDeleteButton" onClick={onClick}>
+        Delete
+      </button>
+    );
+  };
+  const columnDefs = [
+    { headerName: "Id", field: "id", width: 70 },
+    { headerName: "Name", field: "name", width: 330 },
+    {
+      headerName: "Delete",
+      cellRenderer: deleteCellRenderer,
+      width: 100,
+    },
+  ];
+  const onGridReady = (params) => {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  };
+
+
+  const handleAddFood = async (values) => {
+    try {
+      const ccalValue = calculateCcal(values.protein, values.fat, values.carbs);
+      values.ccal = ccalValue;
+      await addFood(values);
+      setShowModal(true);
+      setModalValues(values);
+    } catch (error) {
+      console.error("Error adding food:", error);
+    }
   };
   const handleCloseModal = () => {
     setAnimationOut(true);
@@ -362,11 +402,19 @@ const AddFoodUI = () => {
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          {/* <Button variant="secondary" onClick={handleCloseModal}>
             Закрыть
-          </Button>
+          </Button> */}
         </Modal.Footer>
       </Modal>
+      <div className="ag-theme-alpine gridContainer" style={{ width: 500 }}>
+        <AgGridReact
+          onGridReady={onGridReady}
+          columnDefs={columnDefs}
+          rowData={rowData}
+          className="ag-grid-custom-class"
+        />
+      </div>
     </>
   );
 

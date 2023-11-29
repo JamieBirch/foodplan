@@ -22,10 +22,8 @@
 } */
 
 .itemI {
-    padding-top: 0.5em;
     width: 120px;
     height: 30px;
-    line-height: normal;
     border-radius: 20px;
     background-color: var(--sixth);
     margin-right: 40px;
@@ -36,10 +34,8 @@
 
 .itemF {
     color: var(--seventh);
-    padding-top: 0.5em;
     width: 120px;
     height: 30px;
-    line-height: normal;
     border-radius: 20px;
     background-color: var(--seventh);
     margin-right: 40px;
@@ -48,10 +44,9 @@
 
 .itemP {
     color: var(--eighth);
-    padding-top: 0.5em;
+    padding-top: 0em;
     width: 120px;
     height: 30px;
-    line-height: normal;
     border-radius: 20px;
     text-decoration: none;
     background-color: var(--eighth);
