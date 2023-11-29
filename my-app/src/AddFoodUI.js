@@ -25,6 +25,7 @@ const AddFoodUI = () => {
     carbs: "",
     recipe: "",
     ingredients: [],
+    selectedOption: ''
   });
   const [foodsData, setFoodsData] = useState([]);
   const [newIngredient, setNewIngredient] = useState({
@@ -71,17 +72,17 @@ const AddFoodUI = () => {
     }
   }, [showModal]);
 
-  useEffect(() => {
-    const fetchFoods = async () => {
-      try {
-        const foods = await getFoods();
-        setFoodsData(foods);
-        setRowData([...foods].reverse());
-      } catch (error) {
-        console.error("Error fetching foods:", error);
-      }
-    };
+  const fetchFoods = async () => {
+    try {
+      const foods = await getFoods();
+      setFoodsData([...foods]);
+      setRowData([...foods].reverse());
+    } catch (error) {
+      console.error("Error fetching foods:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchFoods();
   }, []);
 
@@ -92,6 +93,7 @@ const AddFoodUI = () => {
         await deleteFood(params.data.id);
         const updatedFoods = foodsData.filter(food => food.id !== params.data.id);
         setFoodsData(updatedFoods);
+        setRowData([...updatedFoods].reverse());
       } catch (error) {
         console.error("Error deleting food:", error);
       }
@@ -105,14 +107,25 @@ const AddFoodUI = () => {
     );
   };
   const columnDefs = [
-    { headerName: "Id", field: "id", width: 70 },
-    { headerName: "Name", field: "name", width: 330 },
+    { headerName: "Name", field: "name", width: 250 },
+    {
+      headerName: "P/F/C Ccal",
+      valueGetter: function (params) {
+        const protein = params.data.protein || 0;
+        const fat = params.data.fat || 0;
+        const carbs = params.data.carbs || 0;
+        const ccal = params.data.ccal || 0;
+        return `${protein}/${fat}/${carbs} ${ccal}`;
+      },
+      width: 150
+    },
     {
       headerName: "Delete",
       cellRenderer: deleteCellRenderer,
       width: 100,
     },
   ];
+
   const onGridReady = (params) => {
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
@@ -126,6 +139,7 @@ const AddFoodUI = () => {
       await addFood(values);
       setShowModal(true);
       setModalValues(values);
+      fetchFoods();
     } catch (error) {
       console.error("Error adding food:", error);
     }
@@ -288,6 +302,7 @@ const AddFoodUI = () => {
                   value={values.name}
                   name="name"
                   placeholder="Name"
+                  required
                   onChange={handleChange}
                 />
                 <ErrorMessage name="name" component="div" />
@@ -298,6 +313,7 @@ const AddFoodUI = () => {
                   value={values.protein}
                   name="protein"
                   placeholder="Protein"
+                  required
                   onChange={(e) => {
                     handleChange(e);
                     handleProteinChange(e);
@@ -308,6 +324,7 @@ const AddFoodUI = () => {
                   value={values.fat}
                   name="fat"
                   placeholder="Fats"
+                  required
                   onChange={(e) => {
                     handleChange(e);
                     handleFatChange(e);
@@ -318,6 +335,7 @@ const AddFoodUI = () => {
                   value={values.carbs}
                   name="carbs"
                   placeholder="Carbs"
+                  required
                   onChange={(e) => {
                     handleChange(e);
                     handleCarbsChange(e);
@@ -343,6 +361,7 @@ const AddFoodUI = () => {
                   value={newIngredient.howMuch}
                   onChange={handleHowMuchChange}
                   placeholder="amount"
+                  name="amount"
                 />
                 <Select
                   value={newFood.uom}
@@ -386,6 +405,7 @@ const AddFoodUI = () => {
           </Form>
         )}
       </Formik>
+
       <Modal show={showModal} onHide={handleCloseModal} className={animationOut ? 'scale-out-center' : ''}>
         <Modal.Header closeButton>
           <Modal.Title>The food was added successfully</Modal.Title>

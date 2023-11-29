@@ -46,7 +46,7 @@ const AddPlanUI = () => {
           <Form>
             <div className="form-containerAddPlan">
               <div className="days">
-                <Field type="number" name="days" placeholder="Days" />
+                <Field type="number" name="days" placeholder="Days" required />
               </div>
               <div className="prot">
                 <Field type="number" name="requirements.protein" placeholder="Protein" required onChange={(e) => {
@@ -60,6 +60,7 @@ const AddPlanUI = () => {
                   type="number"
                   name="marginOfError"
                   placeholder="Margin of Error"
+                  required
                 />
               </div>
               <div className="fat">
@@ -89,7 +90,7 @@ const AddPlanUI = () => {
       </Formik>
       {serverResponse && (
         <div className="plan">
-          <h2>Your plan</h2>
+          <h2></h2>
           <ServerResponseTable responseData={serverResponse} className="slide-in-fwd-center" />
         </div>
       )}

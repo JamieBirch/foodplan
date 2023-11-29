@@ -56,12 +56,10 @@ const IngredientsGrid = () => {
   };
 
   const columnDefs = [
-    { headerName: "Id", field: "id", width: 70 },
-    { headerName: "Name", field: "name", width: 330 },
-    {
+    { headerName: "Name", field: "name", width: 330 }, {
       headerName: "Delete",
       cellRenderer: deleteCellRenderer,
-      width: 100,
+      width: 200,
     },
   ];
   return (

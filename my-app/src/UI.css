@@ -140,7 +140,7 @@ button:active {
   animation: scale-out-center 0.3s ease-in-out;
 }
 
-form {}
+.input-with-error {}
 
 .form-containerAddPlan {
   display: grid;
@@ -208,6 +208,13 @@ form {}
   text-align: center;
 }
 
+input:invalid:required {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid var(--eighth);
+  background-color: var(--primary);
+}
 
 .form-containerAddFood {
   display: grid;
@@ -219,7 +226,8 @@ form {}
   margin-top: 30px;
 }
 
-.form-group {
+.form-group,
+.input-with-error {
   display: flex;
   flex-direction: column;
   width: 100%;
