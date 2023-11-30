@@ -37,7 +37,7 @@ const IngredientsGrid = () => {
     };
 
     return (
-      <button className="ingrDeleteButton" onClick={onClick}>
+      <button className={`deleteButton color-${params.node.rowIndex % 6}`} onClick={onClick}>
         Delete
       </button>
     );
@@ -83,5 +83,6 @@ const IngredientsGrid = () => {
 };
 
 export default IngredientsGrid;
+
 
 
