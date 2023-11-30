@@ -12,6 +12,8 @@ import { getFoods, deleteFood, addFood } from "./api/FoodsAPI.js";
 import { Ingredients, deleteIngredient } from "./api/IngredientsAPI.js";
 import "./UI.css";
 import { Formik, Form, ErrorMessage } from "formik";
+import AddFoodFormik from "./AddFoodFormik.js";
+import AddFoodModWind from "./AddFoodModWind";
 import CcalCalc, { calculateCcal } from "./CcalCalc";
 
 
@@ -278,155 +280,32 @@ const AddFoodUI = () => {
 
   return (
     <>
-      <Formik
-        initialValues={newFood}
-        onSubmit={(values, actions) => {
-          handleAddFood(values);
-          actions.resetForm();
-          console.log("New Food is added", values)
-        }}
-        validate={(values) => {
-          const errors = {};
-          if (!values.name) {
-            errors.name = "Required";
-          }
-          return errors;
-        }}
-      >
-        {({ values, handleChange, handleSubmit }) => (
-          <Form className="formAddFood">
-            <div className="form-containerAddFood">
-              <div className="form-group">
-                <input className="foodName"
-                  type="text"
-                  value={values.name}
-                  name="name"
-                  placeholder="Name"
-                  required
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="name" component="div" />
-              </div>
-              <div className="form-group">
-                <input
-                  type="number"
-                  value={values.protein}
-                  name="protein"
-                  placeholder="Protein"
-                  required
-                  onChange={(e) => {
-                    handleChange(e);
-                    handleProteinChange(e);
-                  }}
-                />
-                <input
-                  type="number"
-                  value={values.fat}
-                  name="fat"
-                  placeholder="Fats"
-                  required
-                  onChange={(e) => {
-                    handleChange(e);
-                    handleFatChange(e);
-                  }}
-                />
-                <input
-                  type="number"
-                  value={values.carbs}
-                  name="carbs"
-                  placeholder="Carbs"
-                  required
-                  onChange={(e) => {
-                    handleChange(e);
-                    handleCarbsChange(e);
-                  }}
-                />
-                <CcalCalc
-                  protein={Number(values.protein)}
-                  fat={Number(values.fat)}
-                  carbs={Number(values.carbs)}
-                  onChange={handleChange}
-                />
-                <ErrorMessage name="ccal" component="div" />
-              </div>
-              <div className="form-group">
-                <Select
-                  value={ingredients.filter((option) => option.value === newIngredient.id)}
-                  onChange={handleIngredientChange}
-                  options={ingredients}
-                  placeholder="Select an ingredient"
-                />
-                <input
-                  type="number"
-                  value={newIngredient.howMuch}
-                  onChange={handleHowMuchChange}
-                  placeholder="amount"
-                  name="amount"
-                />
-                <Select
-                  value={newFood.uom}
-                  onChange={handleUomChange}
-                  options={uoms}
-                  placeholder="Select a unit of measurement"
-                />
-              </div>
-              <div>
-                <ul>
-                  {newFood.ingredients.map((ingredient, index) => (
-                    <li key={index}>
-                      {ingredient.name} - {ingredient.howMuch} - {ingredient.uom}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-            <div className="button-container">
-              <button className="ingrFoodButton" onClick={handleAddIngredient} type="button">
-                Add Ingredient
-              </button>
-            </div>
-            <div className="recipe-group">
-              <textarea
-                value={values.recipe}
-                name="recipe"
-                placeholder="Recipe"
-                onChange={handleChange}
-                rows="4"
-                cols="40"
-                className="full-width"
-              />
-              <ErrorMessage name="recipe" component="div" />
-              <div className="button-container">
-                <button type="submit" className="foodButton">
-                  Add Food
-                </button>
-              </div>
-            </div>
-          </Form>
-        )}
-      </Formik>
+      <AddFoodFormik
+        ingredients={ingredients}
+        newIngredient={newIngredient}
+        handleAddIngredient={handleAddIngredient}
+        handleIngredientChange={handleIngredientChange}
+        handleHowMuchChange={handleHowMuchChange}
+        handleUomChange={handleUomChange}
+        handleChange={handleChange}
+        handleProteinChange={handleProteinChange}
+        handleFatChange={handleFatChange}
+        handleCarbsChange={handleCarbsChange}
+        handleAddFood={handleAddFood}
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        modalValues={modalValues}
+        animationOut={animationOut}
+        columnDefs={columnDefs}
+        onGridReady={onGridReady}
+        rowData={rowData} />
 
-      <Modal show={showModal} onHide={handleCloseModal} className={animationOut ? 'scale-out-center' : ''}>
-        <Modal.Header closeButton>
-          <Modal.Title>The food was added successfully</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {Object.keys(modalValues).length !== 0 && (
-            <>
-              <h3>{modalValues.name}</h3>
-              <p>Protein: {modalValues.protein}</p>
-              <p>Fats: {modalValues.fat}</p>
-              <p>Carbs: {modalValues.carbs}</p>
-              <p>Ccal: {modalValues.ccal}</p>
-            </>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          {/* <Button variant="secondary" onClick={handleCloseModal}>
-            Закрыть
-          </Button> */}
-        </Modal.Footer>
-      </Modal>
+      <AddFoodModWind
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        modalValues={modalValues}
+        animationOut={animationOut}
+      />
       <div className="ag-theme-alpine gridContainer" style={{ width: 500 }}>
         <AgGridReact
           onGridReady={onGridReady}
