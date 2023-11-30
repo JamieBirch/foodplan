@@ -103,7 +103,7 @@ const AddFoodUI = () => {
 
 
     return (
-      <button className="ingrDeleteButton" onClick={onClick}>
+      <button className={`deleteButton color-${params.node.rowIndex % 6}`} onClick={onClick}>
         Delete
       </button>
     );
@@ -134,18 +134,39 @@ const AddFoodUI = () => {
   };
 
 
+
+
   const handleAddFood = async (values) => {
     try {
       const ccalValue = calculateCcal(values.protein, values.fat, values.carbs);
       values.ccal = ccalValue;
       await addFood(values);
+      setNewFood({
+        name: "",
+        ccal: "",
+        protein: "",
+        fat: "",
+        carbs: "",
+        recipe: "",
+        ingredients: [],
+        selectedOption: ''
+      });
       setShowModal(true);
       setModalValues(values);
       fetchFoods();
+      setNewIngredient({
+        id: null,
+        name: null,
+        howMuch: 0,
+        uom: "",
+      });
     } catch (error) {
       console.error("Error adding food:", error);
     }
   };
+
+
+
   const handleCloseModal = () => {
     setAnimationOut(true);
 
@@ -160,6 +181,7 @@ const AddFoodUI = () => {
 
   const handleAddIngredient = useCallback(() => {
     if (!newIngredient.id || !newIngredient.howMuch || !newIngredient.uom) {
+      console.log('One or more fields are empty or not selected');
       return;
     }
 
@@ -174,7 +196,6 @@ const AddFoodUI = () => {
       ...prevFood,
       ingredients: [...prevFood.ingredients, ingredient],
     }));
-    console.log(ingredient);
 
     setNewIngredient({
       id: null,
@@ -275,6 +296,8 @@ const AddFoodUI = () => {
   return (
     <>
       <AddFoodFormik
+        uoms={uoms}
+        newFood={newFood}
         ingredients={ingredients}
         newIngredient={newIngredient}
         handleAddIngredient={handleAddIngredient}
@@ -286,13 +309,7 @@ const AddFoodUI = () => {
         handleFatChange={handleFatChange}
         handleCarbsChange={handleCarbsChange}
         handleAddFood={handleAddFood}
-        showModal={showModal}
-        handleCloseModal={handleCloseModal}
-        modalValues={modalValues}
-        animationOut={animationOut}
-        columnDefs={columnDefs}
-        onGridReady={onGridReady}
-        rowData={rowData} />
+      />
 
       <AddFoodModWind
         showModal={showModal}
@@ -300,7 +317,7 @@ const AddFoodUI = () => {
         modalValues={modalValues}
         animationOut={animationOut}
       />
-      <div className="ag-theme-alpine gridContainer" style={{ width: 500 }}>
+      <div className="ag-theme-alpine gridContainer">
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}

@@ -16,6 +16,17 @@
 
   --ninth: rgb(30, 78, 43);
   --tenth: rgb(111, 17, 35);
+
+  --bs-red: #dc3545;
+  --bs-orange: #fd7e14;
+  --bs-yellow: #ffc107;
+  --bs-green: rgb(26, 147, 52);
+  --bs-teal: #20c997;
+  --bs-cyan: #0dcaf0;
+  --bs-blue: #0d6efd;
+  --bs-indigo: #6610f2;
+  --bs-purple: #6f42c1;
+  --bs-pink: #d63384;
 }
 
 .ingrButton {
@@ -55,7 +66,7 @@
 .gridContainer {
   height: 40vh;
   text-align: left;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .ingredientControls {
@@ -74,7 +85,90 @@
   transition: 0.3s;
 }
 
-.ag-theme-alpine {}
+.deleteButton.color-0 {
+  width: 60px;
+  height: 30px;
+  line-height: normal;
+  border-radius: 20px;
+  background-color: var(--bs-red);
+  border: none;
+  font-size: medium;
+  color: black;
+  transition: 0.3s;
+}
+
+.deleteButton.color-1 {
+  width: 60px;
+  height: 30px;
+  line-height: normal;
+  border-radius: 20px;
+  background-color: var(--bs-orange);
+  border: none;
+  font-size: medium;
+  color: black;
+  transition: 0.3s;
+}
+
+.deleteButton.color-2 {
+  width: 60px;
+  height: 30px;
+  line-height: normal;
+  border-radius: 20px;
+  background-color: var(--bs-yellow);
+  border: none;
+  font-size: medium;
+  color: black;
+  transition: 0.3s;
+}
+
+.deleteButton.color-3 {
+  width: 60px;
+  height: 30px;
+  line-height: normal;
+  border-radius: 20px;
+  background-color: var(--bs-green);
+  border: none;
+  font-size: medium;
+  color: black;
+  transition: 0.3s;
+}
+
+.deleteButton.color-4 {
+  width: 60px;
+  height: 30px;
+  line-height: normal;
+  border-radius: 20px;
+  background-color: var(--bs-blue);
+  border: none;
+  font-size: medium;
+  color: black;
+  transition: 0.3s;
+}
+
+.deleteButton.color-5 {
+  width: 60px;
+  height: 30px;
+  line-height: normal;
+  border-radius: 20px;
+  background-color: var(--bs-pink);
+  border: none;
+  font-size: medium;
+  color: black;
+  transition: 0.3s;
+}
+
+.ag-theme-alpine {
+  height: 700px;
+}
+
+.ag-root-wrapper {
+  width: 100%;
+  cursor: default;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
 
 .button-container {
   display: flex;
