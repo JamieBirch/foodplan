@@ -226,12 +226,6 @@ const AddFoodUI = () => {
     }));
   };
 
-  const recipeCellRenderer = (params) => {
-    return (
-      <div style={{ whiteSpace: "normal" }} > {params.value} </div>
-    )
-  }
-
 
   const handleProteinChange = useCallback(
     (event) => {
