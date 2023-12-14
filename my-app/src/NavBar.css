@@ -54,15 +54,19 @@
     transition: 0.3s;
 }
 
-
 a:link {
     color: rgb(150, 150, 150);
     text-decoration: none;
     font-size: medium;
+
 }
 
 a:visited {
     color: white;
+}
+
+li:hover {
+    cursor: pointer;
 }
 
 a:hover {

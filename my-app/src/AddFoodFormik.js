@@ -7,6 +7,8 @@ import CcalCalc, { calculateCcal } from "./CcalCalc";
 
 
 const AddFoodFormik = ({
+  uoms,
+  newFood,
   ingredients,
   newIngredient,
   handleAddIngredient,
