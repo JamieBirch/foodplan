@@ -1,10 +1,6 @@
 package com.foodmanager.foodplan;
 
-import com.foodmanager.models.Food;
-import com.foodmanager.models.FoodRequest;
-import com.foodmanager.models.Ingredient;
-import com.foodmanager.models.IngredientInfoRequest;
-import com.foodmanager.models.UnitOfMeasure;
+import com.foodmanager.models.*;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +9,9 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static java.util.Collections.EMPTY_LIST;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -70,7 +68,7 @@ class FoodServiceTest {
 
         Food savedFood = foodService.addFood(foodRequest);
 
-        assertThat(foodRepository.count()).isEqualTo(1);
+        assertThat(foodRepository.findById(savedFood.getId()).isPresent()).isTrue();
         assertThat(savedFood.getName()).isEqualTo(DEFAULT_FOOD_NAME);
         assertThat(savedFood.getCcal()).isEqualTo(DEFAULT_FOOD_CCAL);
         assertThat(savedFood.getProtein()).isEqualTo(DEFAULT_FOOD_PROTEIN);
@@ -85,16 +83,24 @@ class FoodServiceTest {
     void addFoodWithIngredientsTest() {
         FoodRequest foodRequest = getDefaultFood();
 
-        foodRequest.setIngredients(List.of(
-                new IngredientInfoRequest(1L, 50, UnitOfMeasure.GRAM),
-                new IngredientInfoRequest(2L, 1, UnitOfMeasure.UNIT),
-                new IngredientInfoRequest(3L, 15, UnitOfMeasure.ML)
-        ));
+        List<Ingredient> ingredientList = ingredientRepository.findAll();
+
+
+        ArrayList<IngredientInfoRequest> ingredientInfoRequests = new ArrayList<>();
+        int numOfIngredients = 3;
+        Random rndm = new Random();
+        for (int i = 0; i < numOfIngredients; i++) {
+            int rndmIndx = rndm.nextInt(ingredientList.size());
+            Ingredient rndmIngredient = ingredientList.get(rndmIndx);
+            ingredientInfoRequests.add(new IngredientInfoRequest(rndmIngredient.getId(), 50, UnitOfMeasure.GRAM));
+        }
+
+        foodRequest.setIngredients(ingredientInfoRequests);
 
         Food savedFood = foodService.addFood(foodRequest);
 
-        assertThat(foodRepository.count()).isEqualTo(1);
-        assertThat(savedFood.getIngredients().size()).isEqualTo(3);
+        assertThat(foodRepository.findById(savedFood.getId()).isPresent()).isTrue();
+        assertThat(savedFood.getIngredients().size()).isEqualTo(numOfIngredients);
     }
 
     @Test
@@ -104,11 +110,11 @@ class FoodServiceTest {
         FoodRequest foodRequest = getDefaultFood();
 
         Food savedFood = foodService.addFood(foodRequest);
-        assertThat(foodRepository.count()).isEqualTo(1);
+        assertThat(foodRepository.findById(savedFood.getId()).isPresent()).isTrue();
 
         foodService.deleteFood(savedFood.getId());
 
-        assertThat(foodRepository.count()).isEqualTo(0);
+        assertThat(foodRepository.findById(savedFood.getId()).isEmpty()).isTrue();
     }
 
     @Test

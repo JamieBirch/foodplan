@@ -19,6 +19,7 @@ public class PlanController {
 
     @PostMapping("/plan")
     public Plan createPlan(@RequestBody PlanConfiguration configuration) {
+        //TODO validate PlanConfiguration to match macros to ccal calculation
         return planService.createPlan(configuration);
     }
 }

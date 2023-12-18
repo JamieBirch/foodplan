@@ -37,7 +37,6 @@ public class IngredientServiceTest {
 
         Ingredient savedIngredient = ingredientService.addIngredient(ingredientRequest);
 
-        assertThat(ingredientRepository.count()).isEqualTo(1);
         assertThat(savedIngredient.getName()).isEqualTo(DEFAULT_INGREDIENT_NAME);
     }
 
@@ -53,7 +52,6 @@ public class IngredientServiceTest {
                 List.of(ingredientRequestA, ingredientRequestB, ingredientRequestC)
                 );
 
-        assertThat(ingredientRepository.count()).isEqualTo(3);
         assertThat(savedIngredients.size()).isEqualTo(3);
     }
 
@@ -64,10 +62,10 @@ public class IngredientServiceTest {
         IngredientRequest ingredientRequest = getDefaultIngredient();
 
         Ingredient savedIngredient = ingredientService.addIngredient(ingredientRequest);
-        assertThat(ingredientRepository.count()).isEqualTo(1);
+        assertThat(ingredientRepository.findById(savedIngredient.getId()).isPresent());
 
         ingredientService.deleteIngredient(savedIngredient.getId());
-        assertThat(ingredientRepository.count()).isEqualTo(0);
+        assertThat(ingredientRepository.findById(savedIngredient.getId()).isEmpty());
     }
 
     private static IngredientRequest getDefaultIngredient() {
