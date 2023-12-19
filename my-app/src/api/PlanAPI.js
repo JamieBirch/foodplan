@@ -1,3 +1,6 @@
+
+
+
 const BASE_URL = "http://localhost:8080/plan";
 
 /*export const getFoods = async () => {
@@ -16,7 +19,6 @@ export const createPlan = async (planConfiguration) => {
   return handleResponse(response);
 };
 
-// function to handle response from API
 const handleResponse = async (response) => {
   if (!response.ok) {
     const error = await response.text();

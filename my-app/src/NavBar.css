@@ -1,0 +1,92 @@
+.base {
+    --base: rgb(243, 246, 198);
+    --primary: rgb(255, 233, 212);
+    --secondary: rgb(203, 220, 195);
+
+    --third: rgb(179, 201, 55);
+    --fourth: rgb(103, 142, 53);
+    --fifth: rgb(98, 155, 90);
+
+    --sixth: rgb(130, 137, 0);
+    --seventh: rgb(228, 149, 46);
+    --eighth: rgb(210, 83, 64);
+
+    --ninth: rgb(30, 78, 43);
+    --tenth: rgb(111, 17, 35);
+}
+
+/* .flip-in-hor-top {
+    display: flex;
+    -webkit-animation: flip-in-hor-top .5s linear both;
+    animation: flip-in-hor-top .5s linear both;
+} */
+
+.itemI {
+    width: 120px;
+    height: 30px;
+    border-radius: 20px;
+    background-color: var(--sixth);
+    margin-right: 40px;
+    transition: 0.3s;
+    -webkit-animation: flip-in-hor-top .5s linear both;
+    animation: flip-in-hor-top .5s linear both
+}
+
+.itemF {
+    color: var(--seventh);
+    width: 120px;
+    height: 30px;
+    border-radius: 20px;
+    background-color: var(--seventh);
+    margin-right: 40px;
+    transition: 0.3s;
+}
+
+.itemP {
+    color: var(--eighth);
+    padding-top: 0em;
+    width: 120px;
+    height: 30px;
+    border-radius: 20px;
+    text-decoration: none;
+    background-color: var(--eighth);
+    /* box-shadow: 2px 2px 0 var(--ninth); */
+    transition: 0.3s;
+}
+
+a:link {
+    color: rgb(150, 150, 150);
+    text-decoration: none;
+    font-size: medium;
+
+}
+
+a:visited {
+    color: white;
+}
+
+li:hover {
+    cursor: pointer;
+}
+
+a:hover {
+    text-decoration-line: none;
+
+}
+
+/*  button animation */
+@keyframes shadow-drop-center {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 transparent;
+        box-shadow: 0 0 0 0 transparent;
+    }
+
+    100% {
+        -webkit-box-shadow: 0 0 5px 0 black;
+        box-shadow: 0 0 5px 0 black;
+    }
+}
+
+li:active {
+    animation: shadow-drop-center 1ms ease forwards;
+}
