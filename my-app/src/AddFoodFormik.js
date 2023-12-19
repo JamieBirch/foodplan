@@ -27,7 +27,6 @@ const AddFoodFormik = ({
       onSubmit={(values, actions) => {
         handleAddFood(values);
         actions.resetForm();
-        console.log("New Food is added", values)
       }}
       validate={(values) => {
         const errors = {};
@@ -37,7 +36,7 @@ const AddFoodFormik = ({
         return errors;
       }}
     >
-      {({ values, handleChange, handleSubmit }) => (
+      {({ values, handleChange }) => (
         <Form className="formAddFood">
           <div className="form-containerAddFood">
             <div className="form-group">
@@ -54,6 +53,9 @@ const AddFoodFormik = ({
             <div className="form-group">
               <input
                 type="number"
+                inputMode="numeric"
+                onWheel={(e) => e.target.blur()}
+                pattern="[0-9]*"
                 value={values.protein}
                 name="protein"
                 placeholder="Protein"
