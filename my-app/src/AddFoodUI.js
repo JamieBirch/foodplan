@@ -1,10 +1,21 @@
+
 import React, { useState, useEffect, useCallback } from "react";
-import Select from "react-select";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
-import { addFood } from "./api/FoodsAPI.js";
-import { Ingredients } from "./api/IngredientsAPI.js";
+import { Modal, Button } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Select from "react-select";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+import { getFoods, deleteFood, addFood } from "./api/FoodsAPI.js";
+import { Ingredients, deleteIngredient } from "./api/IngredientsAPI.js";
+import "./UI.css";
+import { Formik, Form, ErrorMessage } from "formik";
+import AddFoodFormik from "./AddFoodFormik.js";
+import AddFoodModWind from "./AddFoodModWind";
+import CcalCalc, { calculateCcal } from "./CcalCalc";
+
 
 const AddFoodUI = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -16,7 +27,9 @@ const AddFoodUI = () => {
     carbs: "",
     recipe: "",
     ingredients: [],
+    selectedOption: ''
   });
+  const [foodsData, setFoodsData] = useState([]);
   const [newIngredient, setNewIngredient] = useState({
     id: null,
     name: null,
@@ -30,6 +43,14 @@ const AddFoodUI = () => {
     { value: "TSP", label: "teaspoon" },
     { value: "ML", label: "ml" },
   ];
+  const [showModal, setShowModal] = useState(false);
+  const [modalValues, setModalValues] = useState({});
+  const [animationOut, setAnimationOut] = useState(false);
+
+  const [gridApi, setGridApi] = useState(null);
+  const [gridColumnApi, setGridColumnApi] = useState(null);
+  const [rowData, setRowData] = useState([]);
+
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -43,25 +64,124 @@ const AddFoodUI = () => {
     fetchIngredients();
   }, []);
 
-  const handleAddFood = async () => {
-    const updatedFoods = await addFood(newFood);
-    setNewFood({
-      name: "",
-      ccal: "",
-      protein: "",
-      fat: "",
-      carbs: "",
-      recipe: "",
-      ingredients: [],
-    });
-    const event = new CustomEvent("foodAdded", {
-      value: newFood,
-    });
-    window.dispatchEvent(event);
+  useEffect(() => {
+    if (showModal) {
+      const timeout = setTimeout(() => {
+        handleCloseModal();
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [showModal]);
+
+  const fetchFoods = async () => {
+    try {
+      const foods = await getFoods();
+      setFoodsData([...foods]);
+      setRowData([...foods].reverse());
+    } catch (error) {
+      console.error("Error fetching foods:", error);
+    }
   };
+
+  useEffect(() => {
+    fetchFoods();
+  }, []);
+
+
+  const deleteCellRenderer = (params) => {
+    const onClick = async () => {
+      try {
+        await deleteFood(params.data.id);
+        const updatedFoods = foodsData.filter(food => food.id !== params.data.id);
+        setFoodsData(updatedFoods);
+        setRowData([...updatedFoods].reverse());
+      } catch (error) {
+        console.error("Error deleting food:", error);
+      }
+    };
+
+
+    return (
+      <button className={`deleteButton color-${params.node.rowIndex % 6}`} onClick={onClick}>
+        Delete
+      </button>
+    );
+  };
+  const columnDefs = [
+    { headerName: "Name", field: "name", width: 250 },
+    {
+      headerName: "P/F/C Ccal",
+      valueGetter: function (params) {
+        const protein = params.data.protein || 0;
+        const fat = params.data.fat || 0;
+        const carbs = params.data.carbs || 0;
+        const ccal = params.data.ccal || 0;
+        return `${protein}/${fat}/${carbs} ${ccal}`;
+      },
+      width: 150
+    },
+    {
+      headerName: "Delete",
+      cellRenderer: deleteCellRenderer,
+      width: 100,
+    },
+  ];
+
+  const onGridReady = (params) => {
+    setGridApi(params.api);
+    setGridColumnApi(params.columnApi);
+  };
+
+
+
+
+  const handleAddFood = async (values) => {
+    try {
+      const ccalValue = calculateCcal(values.protein, values.fat, values.carbs);
+      values.ccal = ccalValue;
+      await addFood(values);
+      setNewFood({
+        name: "",
+        ccal: "",
+        protein: "",
+        fat: "",
+        carbs: "",
+        recipe: "",
+        ingredients: [],
+        selectedOption: ''
+      });
+      setShowModal(true);
+      setModalValues(values);
+      fetchFoods();
+      setNewIngredient({
+        id: null,
+        name: null,
+        howMuch: 0,
+        uom: "",
+      });
+    } catch (error) {
+      console.error("Error adding food:", error);
+    }
+  };
+
+
+
+  const handleCloseModal = () => {
+    setAnimationOut(true);
+
+    setTimeout(() => {
+      setShowModal(false);
+      setModalValues({});
+      setAnimationOut(false);
+    }, 300);
+  };
+
+
 
   const handleAddIngredient = useCallback(() => {
     if (!newIngredient.id || !newIngredient.howMuch || !newIngredient.uom) {
+      console.log('One or more fields are empty or not selected');
       return;
     }
 
@@ -76,7 +196,6 @@ const AddFoodUI = () => {
       ...prevFood,
       ingredients: [...prevFood.ingredients, ingredient],
     }));
-    console.log(ingredient);
 
     setNewIngredient({
       id: null,
@@ -85,6 +204,7 @@ const AddFoodUI = () => {
       uom: "",
     });
   }, [newIngredient]);
+
 
   const handleIngredientChange = useCallback((selectedOption) => {
     const selectedIngredient = ingredients.find(
@@ -118,129 +238,96 @@ const AddFoodUI = () => {
     []
   );
 
-    const handleChange = (event) => {
-        const {
-            name,
-            value
-        } = event.target;
-        setNewFood((prevFood) => ({
-            ...prevFood,
-            [name]: value,
-        }));
-    };
+  const handleChange = (event) => {
+    const { name, value } = event.target;
 
-    const recipeCellRenderer = (params) => {
-        return ( <
-            div style = {
-                {
-                    whiteSpace: "normal"
-                }
-            } > {
-                params.value
-            } <
-            /div>
-        );
-    };
+    setNewFood((prevFood) => ({
+      ...prevFood,
+      [name]: value,
+    }));
+  };
 
-return (
-  <div>
-    <div style={{ margin: "10px", display: "flex" }}>
-      {/* 1st column */}
-      <div style={{ flex: 1 }}>
-        <input
-          type="text"
-          value={newFood.name}
-          name="name"
-          placeholder="Name"
-          onChange={handleChange}
+
+  const handleProteinChange = useCallback(
+    (event) => {
+      const proteinValue = parseFloat(event.target.value);
+      const ccalValue = calculateCcal(proteinValue, newFood.fat, newFood.carbs);
+
+      setNewFood((prevFood) => ({
+        ...prevFood,
+        protein: proteinValue,
+        ccal: isNaN(ccalValue) ? null : ccalValue,
+      }));
+    },
+    [newFood.fat, newFood.carbs]
+  );
+
+  const handleFatChange = useCallback(
+    (event) => {
+      const fatValue = parseFloat(event.target.value);
+      const ccalValue = calculateCcal(newFood.protein, fatValue, newFood.carbs);
+
+      setNewFood((prevFood) => ({
+        ...prevFood,
+        fat: fatValue,
+        ccal: isNaN(ccalValue) ? null : ccalValue,
+      }));
+    },
+    [newFood.protein, newFood.carbs]
+  );
+
+  const handleCarbsChange = useCallback((event) => {
+    const carbsValue = parseFloat(event.target.value);
+
+    const protein = newFood.protein;
+    const fat = newFood.fat;
+    const ccalValue = calculateCcal(protein, fat, carbsValue);
+
+    setNewFood((prevFood) => ({
+      ...prevFood,
+      carbs: isNaN(carbsValue) ? '' : carbsValue,
+      ccal: isNaN(carbsValue) ? null : ccalValue,
+    }));
+
+  }, [newFood.fat, newFood.protein]);
+
+
+
+  return (
+    <>
+      <AddFoodFormik
+        uoms={uoms}
+        newFood={newFood}
+        ingredients={ingredients}
+        newIngredient={newIngredient}
+        handleAddIngredient={handleAddIngredient}
+        handleIngredientChange={handleIngredientChange}
+        handleHowMuchChange={handleHowMuchChange}
+        handleUomChange={handleUomChange}
+        handleChange={handleChange}
+        handleProteinChange={handleProteinChange}
+        handleFatChange={handleFatChange}
+        handleCarbsChange={handleCarbsChange}
+        handleAddFood={handleAddFood}
+      />
+
+      <AddFoodModWind
+        showModal={showModal}
+        handleCloseModal={handleCloseModal}
+        modalValues={modalValues}
+        animationOut={animationOut}
+      />
+      <div className="ag-theme-alpine gridContainer">
+        <AgGridReact
+          onGridReady={onGridReady}
+          columnDefs={columnDefs}
+          rowData={rowData}
+          className="ag-grid-custom-class"
         />
       </div>
-      {/* 2nd column */}
-      <div style={{ flex: 1 }}>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.protein}
-            name="protein"
-            placeholder="Protein"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.fat}
-            name="fat"
-            placeholder="Fats"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.carbs}
-            name="carbs"
-            placeholder="Carbs"
-            onChange={handleChange}
-          />
-        </div>
-        <div style={{ marginBottom: '3px' }}>
-          <input
-            type="number"
-            value={newFood.ccal}
-            name="ccal"
-            placeholder="Calories"
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      {/* 3rd column */}
-      <div style={{ flex: 1 }}>
-        <Select
-          value={ingredients.filter(option => option.value === newIngredient.id)}
-          onChange={handleIngredientChange}
-          options={ingredients}
-          placeholder="Select an ingredient"
-        />
-        <input
-          type="number"
-          value={newIngredient.howMuch}
-          onChange={handleHowMuchChange}
-          placeholder="amount"
-        />
-        <Select
-          value={newFood.uom}
-          onChange={handleUomChange}
-          options={uoms}
-          placeholder="Select a unit of measurement"
-        />
-        <button onClick={handleAddIngredient}>Add Ingredient</button>
-      </div>
-      {/* 4th column */}
-      <div style={{ flex: 1, textAlign: "left" }}>
-        <ul>
-                  {newFood.ingredients.map((ingredient, index) => (
-                    <li key={index}>{ingredient.name} - {ingredient.howMuch} - {ingredient.uom} </li>
-                  ))}
-        </ul>
-      </div>
-      {/* 5th column */}
-      <div style={{ flex: 1 }}>
-        <textarea
-          value={newFood.recipe}
-          name="recipe"
-          placeholder="Recipe"
-          onChange={handleChange}
-          rows="4"
-          cols="40"
-        />
-      </div>
-    </div>
-    <button style={{ margin: "10px" }} onClick={handleAddFood}>
-      Add Food
-    </button>
-  </div>
-);
+    </>
+  );
+
 
 };
 

@@ -1,47 +1,33 @@
-import React, { useState } from "react";
-//import AddFoodUI from "./AddFoodUI";
-//import AddPlanUI from "./AddPlanUI";
-import FoodsGrid from "./FoodsGrid";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./Header";
+import Footer from "./Footer";
+import NavBar from "./NavBar";
 import IngredientsGrid from "./IngredientsGrid";
+import FoodsGrid from "./FoodsGrid";
 import PlanGrid from "./PlanGrid";
-import logo from "./logo.svg";
 import "./App.css";
+import Test from "./Test";
 
-function App() {
-  const [showIngredients, setShowIngredients] = useState(true);
-  const [showFoods, setShowFoods] = useState(false);
-  const [showPlan, setShowPlan] = useState(false);
-
-  const handleShowIngredientsClick = () => {
-    setShowIngredients(true);
-    setShowFoods(false);
-    setShowPlan(false);
-  };
-
-  const handleShowFoodsClick = () => {
-    setShowIngredients(false);
-    setShowFoods(true);
-    setShowPlan(false);
-  };
-
-  const handleShowPlan = () => {
-    setShowIngredients(false);
-    setShowFoods(false);
-    setShowPlan(true);
-  };
-
+function App(props) {
   return (
     <div className="App">
-      <div style={{ margin: "10px" }}>
-        <button onClick={handleShowIngredientsClick}>Ingredients</button>
-        <button onClick={handleShowFoodsClick}>Foods</button>
-        <button onClick={handleShowPlan}>Plan</button>
-      </div>
-      {showIngredients && <IngredientsGrid />}
-      {showFoods && <FoodsGrid />}
-      {showPlan && <PlanGrid />}
+      <Router>
+        <Header />
+        <NavBar />
+        <div>
+          <Routes>
+            <Route path='/ingredients' element={<IngredientsGrid />} />
+            <Route path='/foods' element={<FoodsGrid />} />
+            <Route path='/plan' element={<PlanGrid />} />
+          </Routes>
+        </div>
+        <Footer />
+      </Router>
     </div>
   );
 }
 
 export default App;
+
+
