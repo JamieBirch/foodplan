@@ -109,7 +109,7 @@ const AddFoodUI = () => {
     );
   };
   const columnDefs = [
-    { headerName: "Name", field: "name", width: 250 },
+    { headerName: "Name", field: "name", minWidth: 100, maxWidth: 300 },
     {
       headerName: "P/F/C Ccal",
       valueGetter: function (params) {
@@ -119,15 +119,17 @@ const AddFoodUI = () => {
         const ccal = params.data.ccal || 0;
         return `${protein}/${fat}/${carbs} ${ccal}`;
       },
-      width: 150
+      minWidth: 100, maxWidth: 200
     },
     {
       headerName: "Delete",
       cellRenderer: deleteCellRenderer,
-      width: 100,
+      minWidth: 50, maxWidth: 170,
     },
   ];
-
+  const gridOptions = {
+    autoSizeColumns: true,
+  };
   const onGridReady = (params) => {
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
@@ -195,13 +197,14 @@ const AddFoodUI = () => {
     setNewFood((prevFood) => ({
       ...prevFood,
       ingredients: [...prevFood.ingredients, ingredient],
+      uom: '',
     }));
 
     setNewIngredient({
       id: null,
       name: null,
       howMuch: "",
-      uom: "",
+      uom: null,
     });
   }, [newIngredient]);
 
@@ -228,15 +231,13 @@ const AddFoodUI = () => {
     []
   );
 
-  const handleUomChange = useCallback(
-    (selectedOption) => {
-      setNewIngredient((prevIngredient) => ({
-        ...prevIngredient,
-        uom: selectedOption ? selectedOption.value : null,
-      }));
-    },
-    []
-  );
+  const handleUomChange = useCallback((selectedOption) => {
+    setNewIngredient((prevIngredient) => ({
+      ...prevIngredient,
+      uom: selectedOption ? selectedOption.value : null,
+    }));
+  }, []);
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -317,12 +318,15 @@ const AddFoodUI = () => {
         modalValues={modalValues}
         animationOut={animationOut}
       />
-      <div className="ag-theme-alpine gridContainer">
+      <div className="ag-theme-alpine" style={{ width: '100%', height: '300px' }}>
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}
           rowData={rowData}
-          className="ag-grid-custom-class"
+          gridOptions={gridOptions}
+          domLayout={'autoHeight'}
+          className="ag-theme-alpine"
+
         />
       </div>
     </>
