@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Service
 public class PlanBuilder {
 
-    final static int DEFAULT_MARGIN_OF_ERROR = 8;
+    final static int DEFAULT_MARGIN_OF_ERROR = 10;
 
     public static Plan createPlan(PlanConfiguration config, List<Food> foods) {
         int days = config.getDays();
@@ -83,13 +83,36 @@ public class PlanBuilder {
         int minCcal = (expectedCcalSum * (100 - marginOfError)/100);
         int margin = maxCcal - minCcal;
         AtomicInteger remainingCcal = new AtomicInteger(minCcal);
-        while (remainingCcal.getPlain() > 0) {
-            //find next food to add
-            List<Food> filteredFoods = possibleFoods.stream()
-                    .filter(food -> food.getCcal() < remainingCcal.get() + margin)
-                    //+other conditions
 
+        int maxProtein = (expectedProteinSum * (100 + marginOfError)/100);
+        int minProtein = (expectedProteinSum * (100 - marginOfError)/100);
+        int marginProtein = maxProtein - minProtein;
+        AtomicInteger remainingProtein = new AtomicInteger(minProtein);
+
+        int maxCarbs = (expectedCarbsSum * (100 + marginOfError)/100);
+        int minCarbs = (expectedCarbsSum * (100 - marginOfError)/100);
+        int marginCarbs = maxCarbs - minCarbs;
+        AtomicInteger remainingCarbs = new AtomicInteger(minCarbs);
+
+        int maxFats = (expectedFatSum * (100 + marginOfError)/100);
+        int minFats = (expectedFatSum * (100 - marginOfError)/100);
+        int marginFats = maxFats - minFats;
+        AtomicInteger remainingFat = new AtomicInteger(minFats);
+
+        while (remainingCcal.get() > 0) {
+            // Find next food to add
+            List<Food> filteredFoods = possibleFoods.stream()
+                    .filter(food ->
+                                    food.getCcal() <= remainingCcal.get() + margin &&
+                                    food.getProtein() <= remainingProtein.get() + marginProtein &&
+                                    food.getCarbs() <= remainingCarbs.get() + marginCarbs &&
+                                    food.getFat() <= remainingFat.get() + marginFats
+                    )
                     .collect(Collectors.toList());
+
+            if (filteredFoods.isEmpty()) {
+                throw new RuntimeException("There is no foods in database fitting macros requirements");
+            }
 
             Optional<Food> randomFoodIfPresent = filteredFoods.stream()
                     .skip((int) (filteredFoods.size() * Math.random()))
@@ -99,13 +122,20 @@ public class PlanBuilder {
                     food -> {
                         foods.add(food);
                         remainingCcal.addAndGet(-food.getCcal());
+                        remainingProtein.addAndGet(-food.getProtein());
+                        remainingCarbs.addAndGet(-food.getCarbs());
+                        remainingFat.addAndGet(-food.getFat());
                         possibleFoods.remove(food);
                     },
                     () -> {
-//                        int lastElIndex = foods.size() - 1;
-                        Food removedFood = foods.remove((int) (foods.size() * Math.random()));
-                        remainingCcal.addAndGet(removedFood.getCcal());
-                        possibleFoods.add(removedFood);
+                        if (!foods.isEmpty()) {
+                            Food removedFood = foods.remove((int) (foods.size() * Math.random()));
+                            remainingCcal.addAndGet(removedFood.getCcal());
+                            remainingProtein.addAndGet(removedFood.getProtein());
+                            remainingCarbs.addAndGet(removedFood.getCarbs());
+                            remainingFat.addAndGet(removedFood.getFat());
+                            possibleFoods.add(removedFood);
+                        }
                     }
             );
         }
