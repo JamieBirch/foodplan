@@ -90,7 +90,6 @@ const AddPlanUI = () => {
       </Formik>
       {serverResponse && (
         <div className="plan">
-          <h2></h2>
           <ServerResponseTable responseData={serverResponse} className="slide-in-fwd-center" />
         </div>
       )}

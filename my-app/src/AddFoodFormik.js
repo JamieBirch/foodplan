@@ -39,8 +39,9 @@ const AddFoodFormik = ({
       {({ values, handleChange }) => (
         <Form className="formAddFood">
           <div className="form-containerAddFood">
-            <div className="form-group">
-              <input className="foodName"
+            <div className="top">
+              <input
+                className="foodName"
                 type="text"
                 value={values.name}
                 name="name"
@@ -50,7 +51,7 @@ const AddFoodFormik = ({
               />
               <ErrorMessage name="name" component="div" />
             </div>
-            <div className="form-group">
+            <div className="top">
               <input
                 type="number"
                 inputMode="numeric"
@@ -95,37 +96,47 @@ const AddFoodFormik = ({
               />
               <ErrorMessage name="ccal" component="div" />
             </div>
-            <div className="form-group">
-              <Select
-                value={ingredients.filter((option) => option.value === newIngredient.id)}
-                onChange={handleIngredientChange}
-                options={ingredients}
-                placeholder="Select an ingredient"
-              />
-              <input
-                type="number"
-                value={newIngredient.howMuch}
-                onChange={handleHowMuchChange}
-                placeholder="amount"
-                name="amount"
-              />
-              <Select
-                value={newFood.uom}
-                onChange={handleUomChange}
-                options={uoms}
-                placeholder="Select a unit of measurement"
-              />
-            </div>
-            <div>
-              <ul>
-                {newFood.ingredients.map((ingredient, index) => (
-                  <li key={index}>
-                    {ingredient.name} - {ingredient.howMuch} - {ingredient.uom}
-                  </li>
-                ))}
-              </ul>
+            <div className="bottom">
+              <div className="button">
+                <Select
+                  value={ingredients.filter((option) => option.value === newIngredient.id)}
+                  onChange={handleIngredientChange}
+                  options={ingredients}
+                  placeholder="Select an ingredient"
+                  className="select-1"
+
+                />
+              </div>
+              <div className="button">
+                <input
+                  className="amount"
+                  type="number"
+                  value={newIngredient.howMuch}
+                  onChange={handleHowMuchChange}
+                  placeholder="amount"
+                  name="amount"
+                />
+              </div>
+              <div className="button">
+                <Select
+                  value={newFood.uom}
+                  onChange={handleUomChange}
+                  options={uoms}
+                  placeholder="Select a unit of measurement"
+                  className="select-2"
+                />
+              </div>
             </div>
           </div>
+
+          <ul className="listIngrs">
+            {newFood.ingredients.map((ingredient, index) => (
+              <li key={index}>
+                {ingredient.name} - {ingredient.howMuch} - {ingredient.uom}
+              </li>
+            ))}
+          </ul>
+
           <div className="button-container">
             <button className="ingrFoodButton" onClick={handleAddIngredient} type="button">
               Add Ingredient
@@ -149,6 +160,7 @@ const AddFoodFormik = ({
             </div>
           </div>
         </Form>
+
       )}
     </Formik>
   )

@@ -27,9 +27,9 @@ const AddFoodModWind = ({
         )}
       </Modal.Body>
       <Modal.Footer>
-        {/* <Button variant="secondary" onClick={handleCloseModal}>
-            Закрыть
-          </Button> */}
+        <Button variant="secondary" onClick={handleCloseModal}>
+          Закрыть
+        </Button>
       </Modal.Footer>
     </Modal>
   );
