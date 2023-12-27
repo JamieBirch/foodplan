@@ -41,6 +41,11 @@ public class FoodService {
         food.setProtein(foodRequest.getProtein());
         food.setRecipe(foodRequest.getRecipe());
 
+        List<Food> repositoryFoodWithSameName = foodRepository.findByName(foodRequest.getName());
+        if (!repositoryFoodWithSameName.isEmpty()) {
+            throw new RuntimeException(String.format("food with name %s already exists", foodRequest.getName()));
+        }
+
         List<IngredientInfo> ingredients = Optional.ofNullable(foodRequest.getIngredients()).stream().flatMap(Collection::stream)
                 .map(ingredient -> {
                     IngredientInfo ingredientInfo = new IngredientInfo();

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class IngredientService {
@@ -26,17 +25,22 @@ public class IngredientService {
 
     @Transactional
     public Ingredient addIngredient(IngredientRequest ingredientRequest) {
+
+        List<Ingredient> repositoryIngredientWithSameName = ingredientRepository.findByName(ingredientRequest.getName());
+        if (!repositoryIngredientWithSameName.isEmpty()) {
+            throw new RuntimeException(String.format("ingredient with name %s already exists", ingredientRequest.getName()));
+        }
+
         Ingredient ingredient = mappingService.ingredientRequestToIngredient(ingredientRequest);
         return ingredientRepository.save(ingredient);
     }
 
     @Transactional
     public List<Ingredient> addIngredients(List<IngredientRequest> ingredientsRequest) {
-        List<Ingredient> ingredients = ingredientsRequest.stream()
+        ingredientsRequest.stream()
                 .distinct()
-                .map(i -> mappingService.ingredientRequestToIngredient(i))
-                .collect(Collectors.toList());
-        return ingredientRepository.saveAll(ingredients);
+                .forEach(this::addIngredient);
+        return ingredientRepository.findAll();
     }
 
     @Transactional
