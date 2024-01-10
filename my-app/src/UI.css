@@ -431,16 +431,32 @@ table td.day {
   width: 30%;
 }
 
-
-.ag-theme-alpine {
+.ag-theme-alpine,
+.ag-grid-custom-class {
   width: 100%;
-  height: 700px;
+  height: 100vh;
+  padding: 8px;
 }
 
 .ag-root-wrapper {
-  width: 100%;
+  /* width: 100%; */
+  border: 2px solid #ddd;
+}
+
+
+
+.ag-center-cols-container {
+  display: flex;
   cursor: default;
   position: relative;
-  display: flex;
   flex-direction: column;
+}
+
+
+.ag-header-cell,
+.ag-cell {
+  display: flex;
+  overflow: hidden;
+  justify-content: flex-start;
+  width: fit-content;
 }

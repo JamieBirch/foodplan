@@ -56,12 +56,16 @@ const IngredientsGrid = () => {
   };
 
   const columnDefs = [
-    { headerName: "Name", field: "name", width: 330 }, {
+    { headerName: "Name", field: "name" }, {
       headerName: "Delete",
       cellRenderer: deleteCellRenderer,
-      width: 200,
+      flex: 1,
     },
   ];
+  const gridOptions = {
+    // pagination: true,
+    domLayout: 'autoWidth',
+  };
   return (
     <div>
       <div className="ingredientControls">
@@ -70,7 +74,7 @@ const IngredientsGrid = () => {
           Add
         </button>
       </div>
-      <div className="ag-theme-alpine gridContainer" style={{ width: 500 }}>
+      <div className="ag-theme-alpine gridContainer" >
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}

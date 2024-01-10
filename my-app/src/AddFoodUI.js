@@ -109,7 +109,11 @@ const AddFoodUI = () => {
     );
   };
   const columnDefs = [
-    { headerName: "Name", field: "name", minWidth: 100, maxWidth: 300 },
+    {
+      headerName: "Name",
+      field: "name",
+      flex: 1,
+    },
     {
       headerName: "P/F/C Ccal",
       valueGetter: function (params) {
@@ -119,16 +123,17 @@ const AddFoodUI = () => {
         const ccal = params.data.ccal || 0;
         return `${protein}/${fat}/${carbs} ${ccal}`;
       },
-      minWidth: 100, maxWidth: 200
+      flex: 1,
     },
     {
       headerName: "Delete",
       cellRenderer: deleteCellRenderer,
-      minWidth: 50, maxWidth: 170,
+      flex: 1,
     },
   ];
   const gridOptions = {
-    autoSizeColumns: true,
+    // pagination: true,
+    domLayout: 'autoWidth',
   };
   const onGridReady = (params) => {
     setGridApi(params.api);
@@ -168,7 +173,6 @@ const AddFoodUI = () => {
   };
 
 
-
   const handleCloseModal = () => {
     setAnimationOut(true);
 
@@ -193,7 +197,6 @@ const AddFoodUI = () => {
       howMuch: newIngredient.howMuch,
       uom: newIngredient.uom,
     };
-
     setNewFood((prevFood) => ({
       ...prevFood,
       ingredients: [...prevFood.ingredients, ingredient],
@@ -318,14 +321,13 @@ const AddFoodUI = () => {
         modalValues={modalValues}
         animationOut={animationOut}
       />
-      <div className="ag-theme-alpine" style={{ width: '100%', height: '300px' }}>
+      <div className="ag-theme-alpine">
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}
           rowData={rowData}
           gridOptions={gridOptions}
           domLayout={'autoHeight'}
-          className="ag-theme-alpine"
 
         />
       </div>
