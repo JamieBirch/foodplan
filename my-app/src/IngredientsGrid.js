@@ -25,7 +25,6 @@ const IngredientsGrid = () => {
   const onGridReady = (params) => {
     setGridApi(params.api);
     setGridColumnApi(params.columnApi);
-    console.log("Grid is ready");
   };
 
   const deleteCellRenderer = (params) => {
@@ -56,7 +55,7 @@ const IngredientsGrid = () => {
   };
 
   const columnDefs = [
-    { headerName: "Name", field: "name", width: 330 }, {
+    { headerName: "Name", field: "name", width: 460 }, {
       headerName: "Delete",
       cellRenderer: deleteCellRenderer,
       width: 200,
@@ -70,7 +69,7 @@ const IngredientsGrid = () => {
           Add
         </button>
       </div>
-      <div className="ag-theme-alpine gridContainer" style={{ width: 500 }}>
+      <div className="ag-theme-alpine" style={{ width: 660 }}>
         <AgGridReact
           onGridReady={onGridReady}
           columnDefs={columnDefs}

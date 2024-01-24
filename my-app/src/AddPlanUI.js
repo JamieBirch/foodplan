@@ -13,7 +13,7 @@ import ServerResponseTable from "./ServerResponseTable";
 const AddPlanUI = () => {
   const initialValues = {
     days: '',
-    marginOfError: '',
+    // marginOfError: '',
     requirements: {
       protein: '',
       fat: '',
@@ -48,36 +48,29 @@ const AddPlanUI = () => {
               <div className="days">
                 <Field type="number" name="days" placeholder="Days" required />
               </div>
-              <div className="prot">
+              <div className="req">
                 <Field type="number" name="requirements.protein" placeholder="Protein" required onChange={(e) => {
                   setFieldValue("requirements.protein", parseInt(e.target.value, 10));
                   setFieldValue("requirements.ccal", calculateCcal(parseInt(e.target.value, 10), values.requirements.fat, values.requirements.carbs));
                 }} />
-
-              </div>
-              <div className="marg">
+                {/* <div className="marg">
                 <Field
                   type="number"
                   name="marginOfError"
                   placeholder="Margin of Error"
                   required
                 />
-              </div>
-              <div className="fat">
+              </div> */}
                 <Field type="number" name="requirements.fat" placeholder="Fats" required
                   onChange={(e) => {
                     setFieldValue("requirements.fat", parseInt(e.target.value, 10));
                     setFieldValue("requirements.ccal", calculateCcal(parseInt(e.target.value, 10), values.requirements.protein, values.requirements.carbs));
                   }} />
-              </div>
-              <div className="carb">
                 <Field type="number" name="requirements.carbs" placeholder="Carbs" required
                   onChange={(e) => {
                     setFieldValue("requirements.carbs", parseInt(e.target.value, 10));
                     setFieldValue("requirements.ccal", calculateCcal(parseInt(e.target.value, 10), values.requirements.protein, values.requirements.fat));
                   }} />
-              </div>
-              <div className="ccal">
                 <CcalCalc protein={values.requirements.protein} fat={values.requirements.fat} carbs={values.requirements.carbs} />
                 <ErrorMessage name="requirements.ccal" />
               </div>

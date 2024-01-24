@@ -15,7 +15,7 @@ function App(props) {
       <Router>
         <Header />
         <NavBar />
-        <div>
+        <div className="content-container">
           <Routes>
             <Route path='/ingredients' element={<IngredientsGrid />} />
             <Route path='/foods' element={<FoodsGrid />} />

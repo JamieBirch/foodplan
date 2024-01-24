@@ -136,8 +136,6 @@ const AddFoodUI = () => {
   };
 
 
-
-
   const handleAddFood = async (values) => {
     try {
       const ccalValue = calculateCcal(values.protein, values.fat, values.carbs);
