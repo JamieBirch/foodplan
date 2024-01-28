@@ -1,6 +1,7 @@
 :root {
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
   --base: rgb(243, 246, 198);
   --primary: rgb(255, 233, 212);
@@ -38,6 +39,7 @@
   font-size: medium;
   color: white;
   transition: 0.3s;
+  margin: 10px 0px 0px 0px;
 }
 
 .planButton {
@@ -60,11 +62,11 @@
   font-size: medium;
   color: white;
   transition: 0.3s;
-  margin-top: 20px;
+  margin: 0px 0px 10px 0px;
 }
 
 .gridContainer {
-  height: 40vh;
+
   text-align: left;
   overflow: auto;
 }
@@ -180,7 +182,7 @@
   border: none;
   color: white;
   transition: 0.3s;
-  margin: 20px;
+  margin: 10px;
 }
 
 :active {
@@ -220,52 +222,41 @@ button:active {
   animation: scale-out-center 0.3s ease-in-out;
 }
 
+.form-containerAddPlan,
+.form-containerAddFood {
+  display: grid;
+  gap: 20px;
+}
 
 .form-containerAddPlan {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-areas:
-    "days prot marg"
-    "fat fat fat"
-    "carb carb carb"
-    "ccal ccal ccal";
-  justify-items: center;
-  gap: 20px;
-  margin-left: 10px;
+    "days req";
   margin-bottom: 30px;
+  width: 100%;
 }
 
 .days {
-  display: flex;
   grid-area: days;
+  display: flex;
+  justify-content: flex-start;
+  background-color: #f7f6f6;
+  padding: 20px;
 }
 
-.prot {
+.req {
   display: flex;
-  grid-area: prot;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-color: #f7f6f6;
+  padding: 20px;
+  flex-grow: 1;
 }
 
-.marg {
-  display: flex;
-  grid-area: marg;
-}
-
-.fat {
-  display: flex;
-  grid-area: fat;
-  justify-content: space-around;
-}
-
-.carb {
-  display: flex;
-  grid-area: carb;
-  justify-content: space-around;
-}
-
-.ccal {
-  display: flex;
-  grid-area: ccal;
-  justify-content: space-around;
+input {
+  width: 100%;
+  height: 2em;
 }
 
 .button {
@@ -274,15 +265,8 @@ button:active {
 
 .formAddFood {
   display: grid;
-  gap: 20px;
-}
-
-.form-containerAddFood {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-left: 10px;
-  margin-top: 30px;
+  /* gap: 20px;
+  margin-left: 25px; */
 }
 
 .top,
@@ -433,12 +417,12 @@ table td.day {
 
 
 .ag-theme-alpine {
-  width: 100%;
+  width: 660px;
   height: 700px;
 }
 
 .ag-root-wrapper {
-  width: 100%;
+  width: 660px;
   cursor: default;
   position: relative;
   display: flex;

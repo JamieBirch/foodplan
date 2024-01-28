@@ -7,6 +7,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   --base: rgb(243, 246, 198);
   --primary: rgb(255, 233, 212);
   --secondary: rgb(203, 220, 195);
@@ -32,6 +33,12 @@
   --bs-indigo: #6610f2;
   --bs-purple: #6f42c1;
   --bs-pink: #d63384;
+}
+
+.content-container {
+  width: 660px;
+  margin-left: 25px;
+  margin-top: 25px;
 }
 
 .App-logo {
@@ -73,8 +80,10 @@
 
 nav {
   display: flex;
-  width: fit-content;
-
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
 }
 
 ul {
