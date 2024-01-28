@@ -64,9 +64,6 @@ a:hover {
     text-decoration-line: none;
 }
 
-li:active {
-    animation: shadow-drop-center 1ms ease forwards;
-}
 
 .itemI:active {
 
@@ -114,15 +111,54 @@ li:active {
     height: 36px;
 }
 
+.itemI li:active {
+    animation: shadow-drop-center-I 1ms ease forwards;
+}
+
+.itemF li:active {
+    animation: shadow-drop-center-F 1ms ease forwards;
+}
+
+.itemP li:active {
+    animation: shadow-drop-center-P 1ms ease forwards;
+}
+
 /*  button animation */
-@keyframes shadow-drop-center {
+@keyframes shadow-drop-center-I {
     0% {
         -webkit-box-shadow: 0 0 0 0 transparent;
         box-shadow: 0 0 0 0 transparent;
     }
 
     100% {
-        -webkit-box-shadow: 0 0 5px 0 black;
-        box-shadow: 0 0 5px 0 black;
+        -webkit-box-shadow: 0 0 5px 0 var(--sixth);
+        ;
+        box-shadow: 0 0 5px 0 var(--sixth);
+        ;
+    }
+}
+
+@keyframes shadow-drop-center-F {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 transparent;
+        box-shadow: 0 0 0 0 transparent;
+    }
+
+    100% {
+        -webkit-box-shadow: 0 0 5px 0 var(--seventh);
+        ;
+        box-shadow: 0 0 5px 0 var(--seventh);
+    }
+}
+
+@keyframes shadow-drop-center-P {
+    0% {
+        -webkit-box-shadow: 0 0 0 0 transparent;
+        box-shadow: 0 0 0 0 transparent;
+    }
+
+    100% {
+        -webkit-box-shadow: 0 0 5px 0 var(--eighth);
+        box-shadow: 0 0 5px 0 var(--eighth);
     }
 }
